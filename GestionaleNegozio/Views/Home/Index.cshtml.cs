@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace GestionaleNegozio.Pages
+namespace GestionaleNegozio.Views.Home
 {
     public class IndexModel : PageModel
     {
