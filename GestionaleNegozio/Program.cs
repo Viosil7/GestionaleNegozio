@@ -1,8 +1,14 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews(); 
 
 var app = builder.Build();
+builder.Services.AddAuthentication(options => {
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+});
 
 if (!app.Environment.IsDevelopment())
 {

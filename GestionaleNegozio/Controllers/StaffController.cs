@@ -1,4 +1,7 @@
-﻿using GestionaleNegozio.Models;
+﻿using System.Security.Claims;
+using GestionaleNegozio.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 public class StaffController : BaseController
@@ -70,4 +73,42 @@ public class StaffController : BaseController
         _staffDao.Delete(id);
         return RedirectToAction(nameof(Index));
     }
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var staff = _staffDao.Authenticate(model.Username, model.Password);
+            if (staff != null)
+            {
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, staff.Username),
+                new Claim(ClaimTypes.Role, staff.Ruolo)
+            };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("", "Invalid username or password");
+        }
+        return View(model);
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
+
 }
