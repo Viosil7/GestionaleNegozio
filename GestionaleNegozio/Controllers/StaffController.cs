@@ -127,8 +127,15 @@ namespace GestionaleNegozio.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingStaff = _staffDao.GetByUsername(staff.Username);
-                if (existingStaff != null && existingStaff.Id != staff.Id)
+                var existingStaff = _staffDao.GetById(staff.Id);
+                if (existingStaff.Ruolo == "Manager" && staff.Ruolo != "Manager" && _staffDao.IsLastManager(staff.Id))
+                {
+                    ModelState.AddModelError("Ruolo", "Cannot change role of the last manager.");
+                    return View(staff);
+                }
+
+                var userWithSameUsername = _staffDao.GetByUsername(staff.Username);
+                if (userWithSameUsername != null && userWithSameUsername.Id != staff.Id)
                 {
                     ModelState.AddModelError("Username", "Username already exists");
                     return View(staff);
@@ -152,6 +159,13 @@ namespace GestionaleNegozio.Controllers
         [Authorize(Roles = "Manager")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var staff = _staffDao.GetById(id);
+            if (staff.Ruolo == "Manager" && _staffDao.IsLastManager(id))
+            {
+                TempData["Error"] = "Cannot delete the last manager account.";
+                return RedirectToAction(nameof(Index));
+            }
+
             _staffDao.Delete(id);
             return RedirectToAction(nameof(Index));
         }

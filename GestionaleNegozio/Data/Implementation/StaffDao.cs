@@ -144,5 +144,25 @@ public class StaffDao : BaseDao<Staff>, IStaffDao
         }
         return staffList;
     }
+    public int CountManagers()
+    {
+        using var conn = CreateConnection();
+        using var cmd = new SqlCommand("SELECT COUNT(*) FROM Staff WHERE ruolo = 'Manager'", conn);
+        conn.Open();
+        return Convert.ToInt32(cmd.ExecuteScalar());
+    }
+
+    public bool IsLastManager(int staffId)
+    {
+        using var conn = CreateConnection();
+        using var cmd = new SqlCommand(
+            "SELECT CASE WHEN EXISTS (" +
+            "SELECT 1 FROM Staff " +
+            "WHERE ruolo = 'Manager' AND Id != @StaffId" +
+            ") THEN 0 ELSE 1 END", conn);
+        cmd.Parameters.AddWithValue("@StaffId", staffId);
+        conn.Open();
+        return Convert.ToBoolean(cmd.ExecuteScalar());
+    }
 
 }
