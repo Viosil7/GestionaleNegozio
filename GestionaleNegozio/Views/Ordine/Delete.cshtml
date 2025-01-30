@@ -1,5 +1,55 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model GestionaleNegozio.Models.Ordine
+
 @{
+    ViewData["Title"] = "Delete Order";
 }
+
+<h1>Delete Order</h1>
+
+<h3>Are you sure you want to delete this order?</h3>
+<div>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdNegozio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdNegozio)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdProdotto)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdProdotto)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.QuantitaTotale)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.QuantitaTotale)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nota)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nota)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DataOrdine)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DataOrdine)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </form>
+</div>

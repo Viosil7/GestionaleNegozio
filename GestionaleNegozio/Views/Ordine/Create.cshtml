@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model GestionaleNegozio.Models.Ordine
+
 @{
+    ViewData["Title"] = "Create Order";
 }
+
+<h1>Create New Order</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="IdNegozio" class="control-label"></label>
+                <input asp-for="IdNegozio" class="form-control" type="number" />
+                <span asp-validation-for="IdNegozio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdProdotto" class="control-label"></label>
+                <input asp-for="IdProdotto" class="form-control" type="number" />
+                <span asp-validation-for="IdProdotto" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="QuantitaTotale" class="control-label"></label>
+                <input asp-for="QuantitaTotale" class="form-control" type="number" />
+                <span asp-validation-for="QuantitaTotale" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Nota" class="control-label"></label>
+                <input asp-for="Nota" class="form-control" />
+                <span asp-validation-for="Nota" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DataOrdine" class="control-label"></label>
+                <input asp-for="DataOrdine" class="form-control" type="date" />
+                <span asp-validation-for="DataOrdine" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Done</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
