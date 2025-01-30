@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Order Management";
+    var negozi = ViewBag.Negozi as IEnumerable<GestionaleNegozio.Models.Negozio>;
+    var prodotti = ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>;
 }
 
 <h1>Order Management</h1>
@@ -27,8 +29,8 @@
     <tbody>
         @foreach (var item in Model)
         {
-            var negozio = ViewBag.Negozi.FirstOrDefault(n => n.Id == item.IdNegozio);
-            var prodotto = ViewBag.Prodotti.FirstOrDefault(p => p.Id == item.IdProdotto);
+            var negozio = negozi?.FirstOrDefault(n => n.Id == item.IdNegozio);
+            var prodotto = prodotti?.FirstOrDefault(p => p.Id == item.IdProdotto);
 
             <tr>
                 <td>
