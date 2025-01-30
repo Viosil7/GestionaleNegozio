@@ -6,7 +6,7 @@ public class MagazzinoController : BaseController
 {
     private readonly MagazzinoDao _magazzinoDao;
 
-    public MagazzinoController()
+    public MagazzinoController(IConfiguration configuration) : base(configuration)
     {
         _magazzinoDao = new MagazzinoDao(_connectionString);
     }

@@ -45,3 +45,6 @@ CREATE TABLE Ordini (
     FOREIGN KEY (idNegozio) REFERENCES Negozi(Id),
     FOREIGN KEY (idProdotto) REFERENCES Prodotti(Id)
 );
+
+INSERT INTO Staff (username, passw, ruolo)
+VALUES ('Manager', 'Manager1234!', 'Manager');

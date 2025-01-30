@@ -6,7 +6,7 @@ public class ProdottoController : BaseController
 {
     private readonly ProdottoDao _prodottoDao;
 
-    public ProdottoController()
+    public ProdottoController(IConfiguration configuration) : base(configuration)
     {
         _prodottoDao = new ProdottoDao(_connectionString);
     }

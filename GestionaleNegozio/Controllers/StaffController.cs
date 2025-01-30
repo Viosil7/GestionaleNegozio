@@ -11,7 +11,7 @@ namespace GestionaleNegozio.Controllers
     {
         private readonly StaffDao _staffDao;
 
-        public StaffController() : base()
+        public StaffController(IConfiguration configuration) : base(configuration)
         {
             _staffDao = new StaffDao(_connectionString);
         }
