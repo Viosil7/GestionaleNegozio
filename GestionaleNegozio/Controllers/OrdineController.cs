@@ -6,7 +6,7 @@ public class OrdineController : BaseController
 {
     private readonly OrdineDao _ordineDao;
 
-    public OrdineController()
+    public OrdineController(IConfiguration configuration) : base(configuration)
     {
         _ordineDao = new OrdineDao(_connectionString);
     }

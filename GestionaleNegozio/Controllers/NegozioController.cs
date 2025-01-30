@@ -6,7 +6,7 @@ public class NegozioController : BaseController
 {
     private readonly NegozioDao _negozioDao;
 
-    public NegozioController()
+    public NegozioController(IConfiguration configuration) : base(configuration)
     {
         _negozioDao = new NegozioDao(_connectionString);
     }
