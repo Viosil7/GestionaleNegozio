@@ -28,5 +28,30 @@ namespace GestionaleNegozio.Data.Interfaces
         /// Checks if a product is available in a store
         /// </summary>
         bool IsDisponibile(int idNegozio, int idProdotto, int quantitaRichiesta);
+        /// <summary>
+        /// Gets all inventory items with quantity below or equal to the specified threshold
+        /// </summary>
+        /// <param name="threshold">The quantity threshold to check against</param>
+        /// <returns>List of inventory items with low stock</returns>
+        List<Magazzino> GetLowStock(int threshold);
+
+        /// <summary>
+        /// Gets all inventory items with zero quantity
+        /// </summary>
+        /// <returns>List of out-of-stock inventory items</returns>
+        List<Magazzino> GetOutOfStock();
+
+        /// <summary>
+        /// Gets all inventory items for products in a specific category
+        /// </summary>
+        /// <param name="categoria">The product category to filter by</param>
+        /// <returns>List of inventory items in the specified category</returns>
+        List<Magazzino> GetByCategoria(string categoria);
+
+        /// <summary>
+        /// Calculates the total value of all inventory across all stores
+        /// </summary>
+        /// <returns>The total monetary value of all inventory</returns>
+        decimal GetInventoryValue();
     }
 }
