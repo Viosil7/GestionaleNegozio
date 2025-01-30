@@ -1,6 +1,7 @@
 ﻿using GestionaleNegozio.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+[Authorize]
 public class ProdottoController : BaseController
 {
     private readonly ProdottoDao _prodottoDao;

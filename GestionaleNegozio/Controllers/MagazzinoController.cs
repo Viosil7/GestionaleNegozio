@@ -1,6 +1,7 @@
 ﻿using GestionaleNegozio.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+[Authorize]
 public class MagazzinoController : BaseController
 {
     private readonly MagazzinoDao _magazzinoDao;

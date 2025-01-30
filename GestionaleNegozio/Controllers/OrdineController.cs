@@ -1,6 +1,7 @@
 ﻿using GestionaleNegozio.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+[Authorize]
 public class OrdineController : BaseController
 {
     private readonly OrdineDao _ordineDao;
