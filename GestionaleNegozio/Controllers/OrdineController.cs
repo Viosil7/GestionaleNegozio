@@ -1,6 +1,7 @@
 ﻿using GestionaleNegozio.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+[Authorize]
 public class OrdineController : BaseController
 {
     private readonly OrdineDao _ordineDao;
@@ -12,8 +13,8 @@ public class OrdineController : BaseController
 
     public ActionResult Index()
     {
-        var negozi = _ordineDao.GetAll();
-        return View(negozi);
+        var ordini = _ordineDao.GetAll();
+        return View(ordini);
     }
 
     public ActionResult Details(int id)
