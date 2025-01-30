@@ -6,59 +6,57 @@
 
 <h1>Order Management</h1>
 
+@if (User.IsInRole("Manager"))
+{
     <p>
         <a asp-action="Create" class="btn btn-primary">Create New Order</a>
     </p>
-
+}
 
 <table class="table table-striped">
     <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IdNegozio)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdProdotto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.QuantitaTotale)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nota)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DataOrdine)
-        </th>
-        <th>Actions</th>
-    </tr>
+        <tr>
+            <th>Store</th>
+            <th>Product</th>
+            <th>@Html.DisplayNameFor(model => model.QuantitaTotale)</th>
+            <th>@Html.DisplayNameFor(model => model.Nota)</th>
+            <th>@Html.DisplayNameFor(model => model.DataOrdine)</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdNegozio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProdotto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantitaTotale)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nota)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataOrdine)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
-                <span>|</span>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                <span>|</span>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-    }
+        @foreach (var item in Model)
+        {
+            var negozio = ViewBag.Negozi.FirstOrDefault(n => n.Id == item.IdNegozio);
+            var prodotto = ViewBag.Prodotti.FirstOrDefault(p => p.Id == item.IdProdotto);
+
+            <tr>
+                <td>
+                    @(negozio?.Città ?? "Unknown")
+                </td>
+                <td>
+                    @(prodotto?.Nome ?? "Unknown")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantitaTotale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nota)
+                </td>
+                <td>
+                    @item.DataOrdine.ToString("dd/MM/yyyy HH:mm")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                    @if (User.IsInRole("Manager"))
+                    {
+                        <span>|</span>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

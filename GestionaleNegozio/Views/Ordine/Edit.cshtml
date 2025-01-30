@@ -1,7 +1,7 @@
 ﻿@model GestionaleNegozio.Models.Ordine
 
 @{
-    ViewData["Title"] = "Edit order";
+    ViewData["Title"] = "Edit Order";
 }
 
 <h1>Edit Order</h1>
@@ -14,38 +14,44 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group">
-                <label asp-for="IdNegozio" class="control-label"></label>
-                <input asp-for="IdNegozio" class="form-control" type="number" />
+                <label asp-for="IdNegozio" class="control-label">Store</label>
+                <select asp-for="IdNegozio" class="form-control"
+                        asp-items="@(new SelectList(ViewBag.Negozi, "Id", "Città"))">
+                    <option value="">Select a store...</option>
+                </select>
                 <span asp-validation-for="IdNegozio" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="IdProdotto" class="control-label"></label>
-                <input asp-for="IdProdotto" class="form-control" type="number" />
+                <label asp-for="IdProdotto" class="control-label">Product</label>
+                <select asp-for="IdProdotto" class="form-control"
+                        asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome"))">
+                    <option value="">Select a product...</option>
+                </select>
                 <span asp-validation-for="IdProdotto" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="QuantitaTotale" class="control-label"></label>
-                <input asp-for="QuantitaTotale" class="form-control" type="number" />
+                <label asp-for="QuantitaTotale" class="control-label">Quantity</label>
+                <input asp-for="QuantitaTotale" class="form-control" type="number" min="1" />
                 <span asp-validation-for="QuantitaTotale" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Nota" class="control-label"></label>
-                <input asp-for="Nota" class="form-control" />
+                <label asp-for="Nota" class="control-label">Notes</label>
+                <textarea asp-for="Nota" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Nota" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="DataOrdine" class="control-label"></label>
-                <input asp-for="DataOrdine" class="form-control" type="date" />
-                <span asp-validation-for="Nota" class="text-danger"></span>
+                <label asp-for="DataOrdine" class="control-label">Order Date</label>
+                <input asp-for="DataOrdine" class="form-control" type="datetime-local" />
+                <span asp-validation-for="DataOrdine" class="text-danger"></span>
             </div>
 
             <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
