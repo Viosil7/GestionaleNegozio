@@ -1,5 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<GestionaleNegozio.Models.Magazzino>
+
 @{
+    ViewData["Title"] = "Product Availability";
+    var negozi = ViewBag.Negozi as IEnumerable<GestionaleNegozio.Models.Negozio>;
+    var prodotto = ViewBag.Prodotto as GestionaleNegozio.Models.Prodotto;
+}
+
+<h1>Availability for @prodotto.Nome</h1>
+<h4>Category: @prodotto.Categoria | Price: @prodotto.Prezzo.ToString("C")</h4>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Store</th>
+            <th>Region</th>
+            <th>Address</th>
+            <th>Quantity</th>
+            @if (User.IsInRole("Manager"))
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var negozio = negozi.FirstOrDefault(n => n.Id == item.IdNegozio);
+            if (negozio != null)
+            {
+                <tr>
+                    <td>@negozio.Città</td>
+                    <td>@negozio.Regione</td>
+                    <td>@negozio.Indirizzo</td>
+                    <td class="@(item.Quantità == 0 ? "text-danger" : item.Quantità <= 10 ? "text-warning" : "")">
+                        @item.Quantità
+                    </td>
+                    @if (User.IsInRole("Manager"))
+                    {
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateModal@(item.IdNegozio)">
+                                Update Quantity
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        This product is not available in any store.
+    </div>
 }

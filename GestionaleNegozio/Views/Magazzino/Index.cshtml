@@ -1,0 +1,45 @@
+﻿@model IEnumerable<GestionaleNegozio.Models.Negozio>
+
+@{
+    ViewData["Title"] = "Inventory Management";
+}
+
+<h1>Inventory Management</h1>
+
+<div class="row mb-3">
+    <div class="col">
+        <a asp-action="LowStock" class="btn btn-warning">Low Stock Items</a>
+        <a asp-action="OutOfStock" class="btn btn-danger">Out of Stock Items</a>
+        @if (User.IsInRole("Manager"))
+        {
+            <a asp-action="InventoryValue" class="btn btn-info">Total Inventory Value</a>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h3>Select a Store to View Inventory</h3>
+        <div class="list-group">
+            @foreach (var negozio in Model)
+            {
+                <a asp-action="GetByNegozio"
+                   asp-route-idNegozio="@negozio.Id"
+                   class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@negozio.Città</h5>
+                        <small>@negozio.Regione</small>
+                    </div>
+                    <p class="mb-1">@negozio.Indirizzo</p>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info mt-3">
+        @TempData["Message"]
+    </div>
+}
