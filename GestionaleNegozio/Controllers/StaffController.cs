@@ -1,114 +1,173 @@
-﻿using System.Security.Claims;
-using GestionaleNegozio.Models;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using GestionaleNegozio.Models;
 
-public class StaffController : BaseController
+namespace GestionaleNegozio.Controllers
 {
-    private readonly StaffDao _staffDao;
-
-    public StaffController()
+    public class StaffController : BaseController
     {
-        _staffDao = new StaffDao(_connectionString);
-    }
+        private readonly StaffDao _staffDao;
 
-    public ActionResult Index()
-    {
-        var staff = _staffDao.GetAll();
-        return View(staff);
-    }
-
-    public ActionResult Details(int id)
-    {
-        var staff = _staffDao.GetById(id);
-        if (staff == null) return NotFound();
-        return View(staff);
-    }
-
-    public ActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public ActionResult Create(Staff staff)
-    {
-        if (ModelState.IsValid)
+        public StaffController(IConfiguration configuration) : base(configuration)
         {
-            _staffDao.Insert(staff);
-            return RedirectToAction(nameof(Index));
+            _staffDao = new StaffDao(_connectionString);
         }
-        return View(staff);
-    }
 
-    public ActionResult Edit(int id)
-    {
-        var staff = _staffDao.GetById(id);
-        if (staff == null) return NotFound();
-        return View(staff);
-    }
-
-    [HttpPost]
-    public ActionResult Edit(Staff staff)
-    {
-        if (ModelState.IsValid)
+        [Authorize]
+        public ActionResult Index()
         {
-            _staffDao.Update(staff);
-            return RedirectToAction(nameof(Index));
+            var staff = _staffDao.GetAll();
+            return View(staff);
         }
-        return View(staff);
-    }
 
-    public ActionResult Delete(int id)
-    {
-        var staff = _staffDao.GetById(id);
-        if (staff == null) return NotFound();
-        return View(staff);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    public ActionResult DeleteConfirmed(int id)
-    {
-        _staffDao.Delete(id);
-        return RedirectToAction(nameof(Index));
-    }
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Login(LoginModel model)
-    {
-        if (ModelState.IsValid)
+        [Authorize]
+        public ActionResult Details(int id)
         {
-            var staff = _staffDao.Authenticate(model.Username, model.Password);
-            if (staff != null)
+            var staff = _staffDao.GetById(id);
+            if (staff == null) return NotFound();
+            return View(staff);
+        }
+
+        [Authorize(Roles = "Manager")]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Manager")]
+        public IActionResult Register(Staff staff)
+        {
+            if (ModelState.IsValid)
             {
-                var claims = new List<Claim>
+                if (_staffDao.GetByUsername(staff.Username) != null)
+                {
+                    ModelState.AddModelError("Username", "Username already exists");
+                    return View(staff);
+                }
+
+                _staffDao.Insert(staff);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(staff);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated)
             {
-                new Claim(ClaimTypes.Name, staff.Username),
-                new Claim(ClaimTypes.Role, staff.Ruolo)
-            };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
                 return RedirectToAction("Index", "Home");
             }
-
-            ModelState.AddModelError("", "Invalid username or password");
+            return View();
         }
-        return View(model);
-    }
 
-    public async Task<IActionResult> Logout()
-    {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index", "Home");
-    }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var staff = _staffDao.Authenticate(model.Username, model.Password);
+                if (staff != null)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, staff.Username),
+                        new Claim(ClaimTypes.Role, staff.Ruolo),
+                        new Claim(ClaimTypes.NameIdentifier, staff.Id.ToString())
+                    };
 
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = model.RememberMe,
+                        ExpiresUtc = model.RememberMe ?
+                            DateTimeOffset.UtcNow.AddDays(30) :
+                            DateTimeOffset.UtcNow.AddHours(2)
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal,
+                        authProperties
+                    );
+
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError("", "Invalid username or password");
+            }
+            return View(model);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "Manager")]
+        public ActionResult Edit(int id)
+        {
+            var staff = _staffDao.GetById(id);
+            if (staff == null) return NotFound();
+            return View(staff);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Manager")]
+        public ActionResult Edit(Staff staff)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingStaff = _staffDao.GetById(staff.Id);
+                if (existingStaff.Ruolo == "Manager" && staff.Ruolo != "Manager" && _staffDao.IsLastManager(staff.Id))
+                {
+                    ModelState.AddModelError("Ruolo", "Cannot change role of the last manager.");
+                    return View(staff);
+                }
+
+                var userWithSameUsername = _staffDao.GetByUsername(staff.Username);
+                if (userWithSameUsername != null && userWithSameUsername.Id != staff.Id)
+                {
+                    ModelState.AddModelError("Username", "Username already exists");
+                    return View(staff);
+                }
+
+                _staffDao.Update(staff);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(staff);
+        }
+
+        [Authorize(Roles = "Manager")]
+        public ActionResult Delete(int id)
+        {
+            var staff = _staffDao.GetById(id);
+            if (staff == null) return NotFound();
+            return View(staff);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Manager")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var staff = _staffDao.GetById(id);
+            if (staff.Ruolo == "Manager" && _staffDao.IsLastManager(id))
+            {
+                TempData["Error"] = "Cannot delete the last manager account.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _staffDao.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

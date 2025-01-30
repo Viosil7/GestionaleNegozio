@@ -1,5 +1,49 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model GestionaleNegozio.Models.Staff
+
 @{
+    ViewData["Title"] = "Create Staff";
+}
+
+<h1>Create New Staff Member</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Passw" class="control-label">Password</label>
+                <input asp-for="Passw" type="password" class="form-control" />
+                <span asp-validation-for="Passw" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Ruolo" class="control-label">Role</label>
+                <select asp-for="Ruolo" class="form-control">
+                    <option value="">Select a role...</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Employee">Employee</option>
+                </select>
+                <span asp-validation-for="Ruolo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

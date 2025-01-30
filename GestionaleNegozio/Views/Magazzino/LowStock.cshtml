@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<GestionaleNegozio.Models.Magazzino>
 
 @{
-    ViewData["Title"] = "Store Inventory";
-    var negozio = ViewBag.Negozio as GestionaleNegozio.Models.Negozio;
+    ViewData["Title"] = "Low Stock Items";
+    var negozi = ViewBag.Negozi as IEnumerable<GestionaleNegozio.Models.Negozio>;
     var prodotti = ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>;
 }
 
-<h1>Inventory for @negozio.Città Store</h1>
-<h4>@negozio.Indirizzo, @negozio.Regione</h4>
+<h1>Low Stock Items</h1>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to Stores List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Store</th>
             <th>Product</th>
             <th>Category</th>
             <th>Price</th>
@@ -29,30 +29,23 @@
     <tbody>
         @foreach (var item in Model)
         {
+            var negozio = negozi.FirstOrDefault(n => n.Id == item.IdNegozio);
             var prodotto = prodotti.FirstOrDefault(p => p.Id == item.IdProdotto);
-            if (prodotto != null)
+            if (negozio != null && prodotto != null)
             {
                 <tr>
+                    <td>@negozio.Città - @negozio.Indirizzo</td>
                     <td>@prodotto.Nome</td>
                     <td>@prodotto.Categoria</td>
                     <td>@prodotto.Prezzo.ToString("C")</td>
-                    <td>
-                        @if (item.Quantità <= 10)
-                        {
-                            <span class="text-danger">@item.Quantità</span>
-                        }
-                        else
-                        {
-                            @item.Quantità
-                        }
-                    </td>
+                    <td class="text-danger">@item.Quantità</td>
                     @if (User.IsInRole("Manager"))
                     {
                         <td>
                             <button type="button"
                                     class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#updateModal@(item.IdProdotto)">
+                                    data-bs-target="#updateModal@(item.IdNegozio)@(item.IdProdotto)">
                                 Update Quantity
                             </button>
                         </td>
@@ -62,16 +55,16 @@
                 @if (User.IsInRole("Manager"))
                 {
                     <!-- Modal for updating quantity -->
-                    <div class="modal fade" id="updateModal@(item.IdProdotto)" tabindex="-1">
+                    <div class="modal fade" id="updateModal@(item.IdNegozio)@(item.IdProdotto)" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Update Quantity - @prodotto.Nome</h5>
+                                    <h5 class="modal-title">Update Quantity - @prodotto.Nome at @negozio.Città</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <form asp-action="UpdateQuantita">
                                     <div class="modal-body">
-                                        <input type="hidden" name="idNegozio" value="@negozio.Id" />
+                                        <input type="hidden" name="idNegozio" value="@item.IdNegozio" />
                                         <input type="hidden" name="idProdotto" value="@item.IdProdotto" />
                                         <div class="form-group">
                                             <label>Current Quantity: @item.Quantità</label>
@@ -95,7 +88,7 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">
-        No products in inventory for this store.
+    <div class="alert alert-success">
+        No low stock items found. All inventory levels are good!
     </div>
 }

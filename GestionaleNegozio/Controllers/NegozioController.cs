@@ -1,73 +1,193 @@
-﻿using GestionaleNegozio.Models;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using GestionaleNegozio.Models;
 
-public class NegozioController : BaseController
+namespace GestionaleNegozio.Controllers
 {
-    private readonly NegozioDao _negozioDao;
-
-    public NegozioController()
+    [Authorize]
+    public class NegozioController : BaseController
     {
-        _negozioDao = new NegozioDao(_connectionString);
-    }
+        private readonly NegozioDao _negozioDao;
 
-    public ActionResult Index()
-    {
-        var negozi = _negozioDao.GetAll();
-        return View(negozi);
-    }
-
-    public ActionResult Details(int id)
-    {
-        var negozio = _negozioDao.GetById(id);
-        if (negozio == null) return NotFound();
-        return View(negozio);
-    }
-
-    public ActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public ActionResult Create(Negozio negozio)
-    {
-        if (ModelState.IsValid)
+        public NegozioController(IConfiguration configuration) : base(configuration)
         {
-            _negozioDao.Insert(negozio);
-            return RedirectToAction(nameof(Index));
+            _negozioDao = new NegozioDao(_connectionString);
         }
-        return View(negozio);
-    }
 
-    public ActionResult Edit(int id)
-    {
-        var negozio = _negozioDao.GetById(id);
-        if (negozio == null) return NotFound();
-        return View(negozio);
-    }
-
-    [HttpPost]
-    public ActionResult Edit(Negozio negozio)
-    {
-        if (ModelState.IsValid)
+        // GET: Negozio
+        public ActionResult Index()
         {
-            _negozioDao.Update(negozio);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var negozi = _negozioDao.GetAll();
+                return View(negozi);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
         }
-        return View(negozio);
-    }
 
-    public ActionResult Delete(int id)
-    {
-        var negozio = _negozioDao.GetById(id);
-        if (negozio == null) return NotFound();
-        return View(negozio);
-    }
+        // GET: Negozio/Details/5
+        public ActionResult Details(int id)
+        {
+            try
+            {
+                var negozio = _negozioDao.GetById(id);
+                if (negozio == null)
+                {
+                    return NotFound();
+                }
+                return View(negozio);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
+        }
 
-    [HttpPost, ActionName("Delete")]
-    public ActionResult DeleteConfirmed(int id)
-    {
-        _negozioDao.Delete(id);
-        return RedirectToAction(nameof(Index));
+        // GET: Negozio/Create
+        [Authorize(Roles = "Manager")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Negozio/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
+        public ActionResult Create(Negozio negozio)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _negozioDao.Insert(negozio);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(negozio);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                ModelState.AddModelError("", "An error occurred while creating the store.");
+                return View(negozio);
+            }
+        }
+
+        // GET: Negozio/Edit/5
+        [Authorize(Roles = "Manager")]
+        public ActionResult Edit(int id)
+        {
+            try
+            {
+                var negozio = _negozioDao.GetById(id);
+                if (negozio == null)
+                {
+                    return NotFound();
+                }
+                return View(negozio);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        // POST: Negozio/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
+        public ActionResult Edit(Negozio negozio)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _negozioDao.Update(negozio);
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(negozio);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                ModelState.AddModelError("", "An error occurred while updating the store.");
+                return View(negozio);
+            }
+        }
+
+        // GET: Negozio/Delete/5
+        [Authorize(Roles = "Manager")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var negozio = _negozioDao.GetById(id);
+                if (negozio == null)
+                {
+                    return NotFound();
+                }
+                return View(negozio);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        // POST: Negozio/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                _negozioDao.Delete(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                TempData["Error"] = "An error occurred while deleting the store.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // GET: Negozio/ByRegione
+        public ActionResult ByRegione(string regione)
+        {
+            try
+            {
+                var negozi = _negozioDao.GetByRegione(regione);
+                return View("Index", negozi);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        // GET: Negozio/ByCitta
+        public ActionResult ByCitta(string citta)
+        {
+            try
+            {
+                var negozi = _negozioDao.GetByCitta(citta);
+                return View("Index", negozi);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return RedirectToAction("Error", "Home");
+            }
+        }
     }
 }
