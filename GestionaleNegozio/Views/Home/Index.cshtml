@@ -1,34 +1,171 @@
-﻿
-
-@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Welcome to GestionaleNegozio - Your Store Management System</p>
+<div class="text-center mb-4">
+    <h1 class="display-4">
+        <i class="bi bi-shop me-2"></i>Store Management Dashboard
+    </h1>
+    <p class="lead text-muted">
+        <i class="bi bi-calendar3 me-2"></i>@DateTime.Now.ToString("dddd, MMMM dd, yyyy HH:mm")
+    </p>
 </div>
 
-<div class="row justify-content">
+<div class="row mb-4">
     <div class="col-md-4">
-        <div class="card bg-warning border-secondary text-center" style="width: 18rem; height: 5rem; margin-top: 2rem;">
-            <div class="card-body">
-                <a class="card-link text-decoration-none align-middle"> Visualizza ordini</a>
+        <div class="card border-orange">
+            <div class="card-header bg-orange text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history me-2"></i>Recent Orders
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 mb-0">@ViewBag.RecentOrdersCount</h2>
+                <p class="text-muted">Last 5 Orders</p>
             </div>
         </div>
-    </div>  
+    </div>
     <div class="col-md-4">
-        <div class="card bg-warning border-secondary text-center" style="width: 18rem; height: 5rem; margin-top: 2rem;">
-            <div class="card-body">
-                <a class="card-link text-decoration-none align-middle"> Visualizza prodotti</a>
+        <div class="card border-orange">
+            <div class="card-header bg-orange-light text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alerts
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 mb-0">@ViewBag.LowStockCount</h2>
+                <p class="text-muted">Items Below Threshold</p>
             </div>
         </div>
-    </div> 
+    </div>
     <div class="col-md-4">
-        <div class="card bg-warning border-secondary" style="width: 18rem; height: 5rem; margin-top: 2rem;">
-            <div class="card-body align-self-center">
-                <a class="card-link text-decoration-none"> Visualizza magazzino</a>
+        <div class="card border-orange">
+            <div class="card-header bg-orange-dark text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-shop me-2"></i>Active Stores
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 mb-0">@ViewBag.ActiveStoresCount</h2>
+                <p class="text-muted">Total Locations</p>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-orange text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-check me-2"></i>Recent Order Details
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-shop me-2"></i>Store</th>
+                                <th><i class="bi bi-calendar me-2"></i>Date</th>
+                                <th><i class="bi bi-box me-2"></i>Items</th>
+                                <th><i class="bi bi-chat me-2"></i>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in ViewBag.RecentOrders)
+                            {
+                                <tr>
+                                    <td>@order.StoreName</td>
+                                    <td>@order.Date</td>
+                                    <td>
+                                        <span class="badge bg-orange">@order.TotalItems</span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @(string.IsNullOrEmpty(order.Nota) ? "-" : order.Nota)
+                                        </small>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-orange-light text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-exclamation-circle me-2"></i>Low Stock Items
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><i class="bi bi-box-seam me-2"></i>Product</th>
+                                <th><i class="bi bi-shop me-2"></i>Store</th>
+                                <th><i class="bi bi-123 me-2"></i>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.LowStockItems)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.StoreName</td>
+                                    <td>
+                                        <span class="badge bg-orange-light">@item.Quantità</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.8em;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255,107,53,0.1);
+        cursor: pointer;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1rem rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s;
+        margin-bottom: 1rem;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .display-4 {
+        font-weight: 600;
+        color: var(--main-orange);
+    }
+
+    .table th {
+        border-top: none;
+        color: #666;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .text-muted {
+        font-size: 0.9em;
+    }
+</style>
