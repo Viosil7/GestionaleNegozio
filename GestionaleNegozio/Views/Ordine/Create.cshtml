@@ -8,9 +8,42 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-8">
+        <form asp-action="Create" id="orderForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="order-items">
+                <div class="order-item card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Product</label>
+                                    <select name="Items[0].IdProdotto" class="form-control product-select"
+                                            asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome"))">
+                                        <option value="">Select a product...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Quantity</label>
+                                    <input type="number" name="Items[0].Quantita" class="form-control" min="1" />
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger remove-item mt-4">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-success mb-3" id="addItem">
+                <i class="bi bi-plus-circle"></i> Add Item
+            </button>
 
             <div class="form-group">
                 <label asp-for="IdNegozio" class="control-label">Store</label>
@@ -19,21 +52,6 @@
                     <option value="">Select a store...</option>
                 </select>
                 <span asp-validation-for="IdNegozio" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdProdotto" class="control-label">Product</label>
-                <select asp-for="IdProdotto" class="form-control"
-                        asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome"))">
-                    <option value="">Select a product...</option>
-                </select>
-                <span asp-validation-for="IdProdotto" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="QuantitaTotale" class="control-label">Quantity</label>
-                <input asp-for="QuantitaTotale" class="form-control" type="number" min="1" />
-                <span asp-validation-for="QuantitaTotale" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -60,4 +78,48 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $(document).ready(function () {
+            let itemIndex = 0;
+
+            $("#addItem").click(function () {
+                itemIndex++;
+                const newItem = `
+                    <div class="order-item card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Product</label>
+                                        <select name="Items[${itemIndex}].IdProdotto" class="form-control product-select"
+                                                asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome"))">
+                                            <option value="">Select a product...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Quantity</label>
+                                        <input type="number" name="Items[${itemIndex}].Quantita" class="form-control" min="1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger remove-item mt-4">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                $(".order-items").append(newItem);
+            });
+
+            $(document).on("click", ".remove-item", function () {
+                if ($(".order-item").length > 1) {
+                    $(this).closest(".order-item").remove();
+                }
+            });
+        });
+    </script>
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GestionaleNegozio.Models.Ordine>
+﻿@model IEnumerable<GestionaleNegozio.Models.OrderViewModel>
 
 @{
     ViewData["Title"] = "Order Management";
@@ -19,8 +19,8 @@
     <thead>
         <tr>
             <th>Store</th>
-            <th>Product</th>
-            <th>@Html.DisplayNameFor(model => model.QuantitaTotale)</th>
+            <th>Products</th>
+            <th>Total Quantity</th>
             <th>@Html.DisplayNameFor(model => model.Nota)</th>
             <th>@Html.DisplayNameFor(model => model.DataOrdine)</th>
             <th>Actions</th>
@@ -30,24 +30,17 @@
         @foreach (var item in Model)
         {
             var negozio = negozi?.FirstOrDefault(n => n.Id == item.IdNegozio);
-            var prodotto = prodotti?.FirstOrDefault(p => p.Id == item.IdProdotto);
+            var totalQuantity = item.Items?.Sum(i => i.Quantita) ?? 0;
+            var productNames = string.Join(", ", item.Items?
+            .Select(i => prodotti?.FirstOrDefault(p => p.Id == i.IdProdotto)?.Nome ?? "Unknown")
+            ?? Array.Empty<string>());
 
             <tr>
-                <td>
-                    @(negozio?.Città ?? "Unknown")
-                </td>
-                <td>
-                    @(prodotto?.Nome ?? "Unknown")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.QuantitaTotale)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nota)
-                </td>
-                <td>
-                    @item.DataOrdine.ToString("dd/MM/yyyy HH:mm")
-                </td>
+                <td>@(negozio?.Città ?? "Unknown")</td>
+                <td>@productNames</td>
+                <td>@totalQuantity</td>
+                <td>@Html.DisplayFor(modelItem => item.Nota)</td>
+                <td>@item.DataOrdine.ToString("dd/MM/yyyy HH:mm")</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
                     @if (User.IsInRole("Manager"))

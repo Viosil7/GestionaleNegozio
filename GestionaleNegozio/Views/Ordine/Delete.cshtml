@@ -1,9 +1,9 @@
-﻿@model GestionaleNegozio.Models.Ordine
+﻿@model GestionaleNegozio.Models.OrderViewModel
 
 @{
     ViewData["Title"] = "Delete Order";
     var negozio = ViewBag.Negozio as GestionaleNegozio.Models.Negozio;
-    var prodotto = ViewBag.Prodotto as GestionaleNegozio.Models.Prodotto;
+    var prodotti = ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>;
 }
 
 <h1>Delete Order</h1>
@@ -20,17 +20,16 @@
         </dd>
 
         <dt class="col-sm-2">
-            Product
+            Products
         </dt>
         <dd class="col-sm-10">
-            @(prodotto?.Nome ?? "Unknown") - @(prodotto?.Prezzo.ToString("C") ?? "")
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.QuantitaTotale)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.QuantitaTotale)
+            @foreach (var item in Model.Items)
+            {
+                var prodotto = prodotti?.FirstOrDefault(p => p.Id == item.IdProdotto);
+                <div>
+                    @(prodotto?.Nome ?? "Unknown") - @(prodotto?.Prezzo.ToString("C") ?? "") x @item.Quantita
+                </div>
+            }
         </dd>
 
         <dt class="col-sm-2">

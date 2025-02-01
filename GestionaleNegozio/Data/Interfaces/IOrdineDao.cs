@@ -1,27 +1,16 @@
 ﻿using GestionaleNegozio.Models;
 
-namespace GestionaleNegozio.Data.Interfaces
+public interface IOrdineDao
 {
-    public interface IOrdineDao : IBaseDao<Ordine>
-    {
-        /// <summary>
-        /// Gets orders for a specific store
-        /// </summary>
-        List<Ordine> GetByNegozio(int idNegozio);
-
-        /// <summary>
-        /// Gets orders within a date range
-        /// </summary>
-        List<Ordine> GetByDateRange(DateTime startDate, DateTime endDate);
-
-        /// <summary>
-        /// Gets orders for a specific product
-        /// </summary>
-        List<Ordine> GetByProdotto(int idProdotto);
-
-        /// <summary>
-        /// Gets recent orders with optional limit
-        /// </summary>
-        List<Ordine> GetRecentOrders(int limit = 10);
-    }
+    List<OrderViewModel> GetAll();
+    OrderViewModel GetById(int id);
+    int Insert(OrderViewModel order);
+    void Update(OrderViewModel order);
+    void Delete(int id);
+    void DeleteOrderItems(int orderId);
+    List<OrderViewModel> GetByNegozio(int idNegozio);
+    List<OrderViewModel> GetByDateRange(DateTime startDate, DateTime endDate);
+    List<OrderViewModel> GetByProdotto(int idProdotto);
+    List<OrderViewModel> GetRecentOrders(int limit = 10);
+    bool Exists(int id);
 }

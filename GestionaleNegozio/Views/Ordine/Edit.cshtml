@@ -1,4 +1,4 @@
-﻿@model GestionaleNegozio.Models.Ordine
+﻿@model GestionaleNegozio.Models.OrderViewModel
 
 @{
     ViewData["Title"] = "Edit Order";
@@ -8,10 +8,48 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-8">
+        <form asp-action="Edit" id="orderForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+
+            <div class="order-items">
+                @for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    <div class="order-item card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Product</label>
+                                        <select name="Items[@i].IdProdotto" class="form-control product-select"
+                                                asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome", Model.Items[i].IdProdotto))">
+                                            <option value="">Select a product...</option>
+                                        </select>
+                                        <input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Quantity</label>
+                                        <input type="number" name="Items[@i].Quantita" class="form-control"
+                                               min="1" value="@Model.Items[i].Quantita" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger remove-item mt-4">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="button" class="btn btn-success mb-3" id="addItem">
+                <i class="bi bi-plus-circle"></i> Add Item
+            </button>
 
             <div class="form-group">
                 <label asp-for="IdNegozio" class="control-label">Store</label>
@@ -20,21 +58,6 @@
                     <option value="">Select a store...</option>
                 </select>
                 <span asp-validation-for="IdNegozio" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdProdotto" class="control-label">Product</label>
-                <select asp-for="IdProdotto" class="form-control"
-                        asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome"))">
-                    <option value="">Select a product...</option>
-                </select>
-                <span asp-validation-for="IdProdotto" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="QuantitaTotale" class="control-label">Quantity</label>
-                <input asp-for="QuantitaTotale" class="form-control" type="number" min="1" />
-                <span asp-validation-for="QuantitaTotale" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -61,4 +84,51 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $(document).ready(function () {
+            let itemIndex = @Model.Items.Count;
+
+            $("#addItem").click(function () {
+                const newItem = `
+                    <div class="order-item card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Product</label>
+                                        <select name="Items[${itemIndex}].IdProdotto" class="form-control product-select">
+                                            <option value="">Select a product...</option>
+        @foreach (var product in ViewBag.Prodotti)
+        {
+                                                    <option value="@product.Id">@product.Nome</option>
+        }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Quantity</label>
+                                        <input type="number" name="Items[${itemIndex}].Quantita" class="form-control" min="1" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-danger remove-item mt-4">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                $(".order-items").append(newItem);
+                itemIndex++;
+            });
+
+            $(document).on("click", ".remove-item", function () {
+                if ($(".order-item").length > 1) {
+                    $(this).closest(".order-item").remove();
+                }
+            });
+        });
+    </script>
 }

@@ -21,6 +21,9 @@
             <div class="form-group">
                 <label asp-for="Passw" class="control-label">Password</label>
                 <input asp-for="Passw" type="password" class="form-control" />
+                <small class="form-text text-muted">
+                    Password must be at least 8 characters and contain: uppercase letter, lowercase letter, number, and special character.
+                </small>
                 <span asp-validation-for="Passw" class="text-danger"></span>
             </div>
 

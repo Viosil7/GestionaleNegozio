@@ -32,17 +32,23 @@ namespace GestionaleNegozio.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        public IActionResult Register()
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Manager")]
-        public IActionResult Register(Staff staff)
+        public IActionResult Create(Staff staff)
         {
             if (ModelState.IsValid)
             {
+                if (!IsValidPassword(staff.Passw))
+                {
+                    ModelState.AddModelError("Passw", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                    return View(staff);
+                }
+
                 if (_staffDao.GetByUsername(staff.Username) != null)
                 {
                     ModelState.AddModelError("Username", "Username already exists");
@@ -53,6 +59,27 @@ namespace GestionaleNegozio.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(staff);
+        }
+
+        private bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
+                return false;
+
+            bool hasUpper = false;
+            bool hasLower = false;
+            bool hasNumber = false;
+            bool hasSpecial = false;
+
+            foreach (char c in password)
+            {
+                if (char.IsUpper(c)) hasUpper = true;
+                else if (char.IsLower(c)) hasLower = true;
+                else if (char.IsDigit(c)) hasNumber = true;
+                else if (!char.IsLetterOrDigit(c)) hasSpecial = true;
+            }
+
+            return hasUpper && hasLower && hasNumber && hasSpecial;
         }
 
         [AllowAnonymous]
@@ -128,6 +155,13 @@ namespace GestionaleNegozio.Controllers
             if (ModelState.IsValid)
             {
                 var existingStaff = _staffDao.GetById(staff.Id);
+
+                if (!IsValidPassword(staff.Passw))
+                {
+                    ModelState.AddModelError("Passw", "Password must be at least 8 characters and contain: uppercase letter, lowercase letter, number, and special character.");
+                    return View(staff);
+                }
+
                 if (existingStaff.Ruolo == "Manager" && staff.Ruolo != "Manager" && _staffDao.IsLastManager(staff.Id))
                 {
                     ModelState.AddModelError("Ruolo", "Cannot change role of the last manager.");
