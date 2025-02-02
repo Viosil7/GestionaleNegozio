@@ -142,4 +142,25 @@ public class ProdottoController : Controller
         }
         ViewBag.Inventory = inventory;
     }
+    public IActionResult Details(int id)
+    {
+        var prodotto = _prodottoDao.GetById(id);
+
+        if (prodotto == null)
+        {
+            TempData["Error"] = "Product not found";
+            return RedirectToAction(nameof(Index));
+        }
+
+        ViewBag.Negozi = _negozioDao.GetAll();
+        var inventory = new Dictionary<int, int>();
+        foreach (var negozio in ViewBag.Negozi)
+        {
+            inventory[negozio.Id] = _magazzinoDao.GetQuantita(negozio.Id, id);
+        }
+        ViewBag.Inventory = inventory;
+
+        return View(prodotto);
+    }
+
 }
