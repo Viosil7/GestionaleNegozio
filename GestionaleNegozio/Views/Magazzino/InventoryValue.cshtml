@@ -5,20 +5,20 @@
 }
 
 <div class="container">
-    <h1>Total Inventory Value</h1>
+    <h1>Valore Totale dell'Inventario</h1>
 
     <div class="mb-3">
-        <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
+        <a asp-action="Index" class="btn btn-secondary">Torna alla Gestione dell'Inventario</a>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <h2 class="card-title">Current Inventory Value</h2>
+            <h2 class="card-title">Valore attuale dell'Inventario</h2>
             <div class="display-4 text-primary mb-3">
                 @Model.ToString("C")
             </div>
             <p class="card-text text-muted">
-                Total value of all products across all stores
+                Valore totale di tutti i prodotti in tutti i negozi.
             </p>
         </div>
     </div>
@@ -27,11 +27,11 @@
     {
         <div class="alert alert-warning mt-3">
             <i class="bi bi-exclamation-triangle"></i>
-            Warning: The total inventory value is zero. This might indicate:
+            Avviso: Il valore totale dell'inventario è zero. Questo può indicare che:
             <ul>
-                <li>All stores are out of stock</li>
-                <li>No products have been added to inventory</li>
-                <li>All product prices are set to zero</li>
+                <li>Tutti i negozi hanno esaurito tutti i prodotti</li>
+                <li>Nessun prodotto è stato aggiunto all'inventario</li>
+                <li>tutti i prezzi dei prodotti sono impostati a 0</li>
             </ul>
         </div>
     }

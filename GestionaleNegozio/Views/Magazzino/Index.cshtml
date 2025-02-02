@@ -6,7 +6,7 @@
 
 <div class="text-center mb-4">
     <h1 class="display-4 text-orange">
-        <i class="bi bi-boxes me-2"></i>Inventory Management
+        <i class="bi bi-boxes me-2"></i>Gestione Inventario
     </h1>
 </div>
 
@@ -15,22 +15,22 @@
         <div class="card">
             <div class="card-header bg-orange text-white">
                 <h5 class="mb-0">
-                    <i class="bi bi-list-ul me-2"></i>Store Inventory
+                    <i class="bi bi-list-ul me-2"></i>Inventario Negozio
                 </h5>
             </div>
             <div class="card-body px-4">
                 <div class="row mb-3">
                     <div class="col">
                         <a asp-action="LowStock" class="btn btn-orange me-2">
-                            <i class="bi bi-exclamation-triangle me-2"></i>Low Stock
+                            <i class="bi bi-exclamation-triangle me-2"></i>Scorte in Esaurimento
                         </a>
                         <a asp-action="OutOfStock" class="btn btn-orange-outline me-2">
-                            <i class="bi bi-x-circle me-2"></i>Out of Stock
+                            <i class="bi bi-x-circle me-2"></i>Prodotto Esaurito
                         </a>
                         @if (User.IsInRole("Manager"))
                         {
                             <a asp-action="InventoryValue" class="btn btn-orange-outline">
-                                <i class="bi bi-cash-coin me-2"></i>Inventory Value
+                                <i class="bi bi-cash-coin me-2"></i>Valore dell'Inventario
                             </a>
                         }
                     </div>
@@ -40,9 +40,9 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th><i class="bi bi-building me-2"></i>Store</th>
-                                <th><i class="bi bi-globe me-2"></i>Region</th>
-                                <th><i class="bi bi-geo-alt me-2"></i>Address</th>
+                                <th><i class="bi bi-building me-2"></i>Negozio</th>
+                                <th><i class="bi bi-globe me-2"></i>Regione</th>
+                                <th><i class="bi bi-geo-alt me-2"></i>Indirizzo</th>
                                 <th style="text-align: right"></th>
                             </tr>
                         </thead>
@@ -57,7 +57,7 @@
                                         <a asp-action="GetByNegozio"
                                            asp-route-idNegozio="@negozio.Id"
                                            class="btn btn-sm btn-orange">
-                                            <i class="bi bi-eye me-2"></i>View Inventory
+                                            <i class="bi bi-eye me-2"></i>Vedi Inventario
                                         </a>
                                     </td>
                                 </tr>

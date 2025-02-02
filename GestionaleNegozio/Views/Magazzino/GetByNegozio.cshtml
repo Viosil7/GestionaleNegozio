@@ -16,13 +16,13 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Quantity</th>
+            <th>Prodotto</th>
+            <th>Categoria</th>
+            <th>Prezzo</th>
+            <th>Quantità</th>
             @if (User.IsInRole("Manager"))
             {
-                <th>Actions</th>
+                <th>Azioni</th>
             }
         </tr>
     </thead>
@@ -53,7 +53,7 @@
                                     class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#updateModal@(item.IdProdotto)">
-                                Update Quantity
+                                Aggiorna Quantità
                             </button>
                         </td>
                     }
@@ -73,14 +73,14 @@
                                         <input type="hidden" name="idNegozio" value="@negozio.Id" />
                                         <input type="hidden" name="idProdotto" value="@item.IdProdotto" />
                                         <div class="form-group">
-                                            <label>Current Quantity: @item.Quantità</label>
+                                            <label>Quantità attuale: @item.Quantità</label>
                                             <input type="number" name="nuovaQuantita" class="form-control"
                                                    value="@item.Quantità" min="0" required />
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
                                     </div>
                                 </form>
                             </div>
@@ -95,6 +95,6 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info">
-        No products in inventory for this store.
+        Nessun prodotto nell'inventario di questo negozio.
     </div>
 }

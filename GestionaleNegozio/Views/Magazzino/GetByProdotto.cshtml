@@ -6,23 +6,23 @@
     var prodotto = ViewBag.Prodotto as GestionaleNegozio.Models.Prodotto;
 }
 
-<h1>Availability for @prodotto.Nome</h1>
-<h4>Category: @prodotto.Categoria | Price: @prodotto.Prezzo.ToString("C")</h4>
+<h1>Disponibilità per @prodotto.Nome</h1>
+<h4>Categoria: @prodotto.Categoria | Price: @prodotto.Prezzo.ToString("C")</h4>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
+    <a asp-action="Index" class="btn btn-secondary">Torna alla Gestione dell'Inventario</a>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Store</th>
-            <th>Region</th>
-            <th>Address</th>
-            <th>Quantity</th>
+            <th>Negozio</th>
+            <th>Regione</th>
+            <th>Indirizzo</th>
+            <th>Quantità</th>
             @if (User.IsInRole("Manager"))
             {
-                <th>Actions</th>
+                <th>Azioni</th>
             }
         </tr>
     </thead>
@@ -45,7 +45,7 @@
                             <button type="button" class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#updateModal@(item.IdNegozio)">
-                                Update Quantity
+                                Aggiorna Quantità
                             </button>
                         </td>
                     }
@@ -58,6 +58,6 @@
 @if (!Model.Any())
 {
     <div class="alert alert-info">
-        This product is not available in any store.
+        Questo prodotto non è disponibile in nessun negozio.
     </div>
 }
