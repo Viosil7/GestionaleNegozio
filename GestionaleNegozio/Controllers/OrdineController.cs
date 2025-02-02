@@ -182,7 +182,6 @@ namespace GestionaleNegozio.Controllers
             }
         }
 
-        // Optional: Add methods for getting orders by store, date range, etc.
         public ActionResult GetByStore(int idNegozio)
         {
             try

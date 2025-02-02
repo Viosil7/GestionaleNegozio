@@ -159,7 +159,7 @@ public class ProdottoDao : BaseDao<Prodotto>, IProdottoDao
         cmd.Parameters.AddWithValue("@Nome", prodotto.Nome);
         cmd.Parameters.AddWithValue("@Categoria", prodotto.Categoria);
         cmd.Parameters.AddWithValue("@Descrizione", (object)prodotto.Descrizione ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo);  // Ensure this is a decimal
+        cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo); 
 
         conn.Open();
         cmd.ExecuteNonQuery();

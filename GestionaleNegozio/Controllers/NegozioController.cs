@@ -14,7 +14,6 @@ namespace GestionaleNegozio.Controllers
             _negozioDao = new NegozioDao(_connectionString);
         }
 
-        // GET: Negozio
         public ActionResult Index()
         {
             try
@@ -24,12 +23,10 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
 
-        // GET: Negozio/Details/5
         public ActionResult Details(int id)
         {
             try
@@ -43,19 +40,16 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
 
-        // GET: Negozio/Create
         [Authorize(Roles = "Manager")]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Negozio/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
@@ -72,13 +66,11 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 ModelState.AddModelError("", "An error occurred while creating the store.");
                 return View(negozio);
             }
         }
 
-        // GET: Negozio/Edit/5
         [Authorize(Roles = "Manager")]
         public ActionResult Edit(int id)
         {
@@ -93,12 +85,10 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
 
-        // POST: Negozio/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
@@ -115,13 +105,11 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 ModelState.AddModelError("", "An error occurred while updating the store.");
                 return View(negozio);
             }
         }
 
-        // GET: Negozio/Delete/5
         [Authorize(Roles = "Manager")]
         public ActionResult Delete(int id)
         {
@@ -136,12 +124,10 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
 
-        // POST: Negozio/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
@@ -154,13 +140,11 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 TempData["Error"] = "An error occurred while deleting the store.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
-        // GET: Negozio/ByRegione
         public ActionResult ByRegione(string regione)
         {
             try
@@ -170,12 +154,10 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
 
-        // GET: Negozio/ByCitta
         public ActionResult ByCitta(string citta)
         {
             try
@@ -185,7 +167,6 @@ namespace GestionaleNegozio.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error
                 return RedirectToAction("Error", "Home");
             }
         }
