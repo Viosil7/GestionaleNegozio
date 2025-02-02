@@ -6,7 +6,7 @@
 
 <div class="text-center mb-4">
     <h1 class="display-4 text-orange">
-        <i class="bi bi-box-seam me-2"></i>Product Details
+        <i class="bi bi-box-seam me-2"></i>Dettagli Prodotto
     </h1>
 </div>
 
@@ -15,26 +15,26 @@
         <div class="card">
             <div class="card-header bg-orange text-white">
                 <h5 class="mb-0">
-                    <i class="bi bi-info-circle me-2"></i>Product Information
+                    <i class="bi bi-info-circle me-2"></i>Informazioni Prodotto
                 </h5>
             </div>
             <div class="card-body px-4">
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <h6 class="text-muted mb-1">
-                            <i class="bi bi-tag me-2"></i>Product Name
+                            <i class="bi bi-tag me-2"></i>Nome Prodotto
                         </h6>
                         <p class="mb-0 fs-5">@Model.Nome</p>
                     </div>
                     <div class="col-md-4">
                         <h6 class="text-muted mb-1">
-                            <i class="bi bi-collection me-2"></i>Category
+                            <i class="bi bi-collection me-2"></i>Categoria
                         </h6>
                         <p class="mb-0 fs-5">@Model.Categoria</p>
                     </div>
                     <div class="col-md-4">
                         <h6 class="text-muted mb-1">
-                            <i class="bi bi-currency-euro me-2"></i>Price
+                            <i class="bi bi-currency-euro me-2"></i>Prezzo
                         </h6>
                         <p class="mb-0 fs-5">@Model.Prezzo.ToString("C")</p>
                     </div>
@@ -42,16 +42,15 @@
 
                 <div class="mb-4">
                     <h6 class="text-muted mb-1">
-                        <i class="bi bi-file-text me-2"></i>Description
+                        <i class="bi bi-file-text me-2"></i>Descrizione
                     </h6>
                     <p class="mb-0">@(string.IsNullOrEmpty(Model.Descrizione) ? "No description available" : Model.Descrizione)</p>
                 </div>
 
-                <!-- Inventory Section -->
                 <div class="card mb-4">
                     <div class="card-header bg-light">
                         <h6 class="mb-0">
-                            <i class="bi bi-boxes me-2"></i>Current Inventory
+                            <i class="bi bi-boxes me-2"></i>Inventario Attuale
                         </h6>
                     </div>
                     <div class="card-body p-0">
@@ -59,9 +58,9 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th><i class="bi bi-shop me-2"></i>Store</th>
-                                        <th><i class="bi bi-geo-alt me-2"></i>Location</th>
-                                        <th class="text-end"><i class="bi bi-123 me-2"></i>Quantity</th>
+                                        <th><i class="bi bi-shop me-2"></i>Negozio</th>
+                                        <th><i class="bi bi-geo-alt me-2"></i>Località</th>
+                                        <th class="text-end"><i class="bi bi-123 me-2"></i>Quantità</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,17 +88,17 @@
                         @if (User.IsInRole("Manager"))
                         {
                             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-orange me-2">
-                                <i class="bi bi-pencil me-2"></i>Edit
+                                <i class="bi bi-pencil me-2"></i>Modifica
                             </a>
                         }
                         <a asp-action="Index" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                            <i class="bi bi-arrow-left me-2"></i>Torna all'elenco
                         </a>
                     </div>
                     @if (User.IsInRole("Manager"))
                     {
                         <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
-                            <i class="bi bi-trash me-2"></i>Delete
+                            <i class="bi bi-trash me-2"></i>Cancella
                         </a>
                     }
                 </div>
