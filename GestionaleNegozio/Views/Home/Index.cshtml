@@ -86,6 +86,14 @@
                                             @(string.IsNullOrEmpty(order.Nota) ? "-" : order.Nota)
                                         </small>
                                     </td>
+                                    <td style="text-align: right">
+                                        <a asp-controller="Ordine"
+                                           asp-action="Details"
+                                           asp-route-id="@order.Id"
+                                           class="btn btn-sm btn-orange">
+                                            <i class="bi bi-eye me-2"></i>Dettaglio Ordine
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
