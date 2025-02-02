@@ -4,48 +4,97 @@
     ViewData["Title"] = "Staff Management";
 }
 
-<h1>Staff Management</h1>
+<div class="text-center mb-4">
+    <h1 class="display-4 text-orange">
+        <i class="bi bi-people me-2"></i>Staff Management
+    </h1>
+</div>
 
-@if (User.IsInRole("Manager"))
-{
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New Staff Member</a>
-    </p>
-}
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ruolo)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+<div class="row justify-content-center mb-4">
+    <div class="col-xl-8">
+        @if (User.IsInRole("Manager"))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ruolo)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
-                    @if (User.IsInRole("Manager"))
-                    {
-                        <span>|</span>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <span>|</span>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
-                    }
-                </td>
-            </tr>
+            <a asp-action="Create" class="btn btn-orange">
+                <i class="bi bi-person-plus me-2"></i>Create New Staff Member
+            </a>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header bg-orange text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul me-2"></i>Staff List
+                </h5>
+            </div>
+            <div class="card-body px-4">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%">
+                                    <i class="bi bi-person me-2"></i>USERNAME
+                                </th>
+                                <th style="width: 30%; text-align: center">
+                                    <i class="bi bi-shield me-2"></i>RUOLO
+                                </th>
+                                <th style="width: 30%; text-align: right">
+                                    <i class="bi bi-gear me-2"></i>ACTIONS
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Username</td>
+                                    <td style="text-align: center">
+                                        <span class="badge bg-orange">
+                                            @item.Ruolo
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.Id">
+                                            <i class="bi bi-info-circle"></i> Details
+                                        </a>
+                                        @if (User.IsInRole("Manager"))
+                                        {
+                                            <a class="btn btn-sm btn-outline-success" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.8em;
+    }
+
+    .table th {
+        border-top: none;
+        color: #666;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>

@@ -166,3 +166,59 @@ body {
 .text-muted {
     font-size: 0.9em;
 }
+
+.row {
+    margin-bottom: 3rem;
+}
+
+.card {
+    margin-bottom: 2rem;
+    box-shadow: 0 0.25rem 1rem rgba(255,107,53,0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-outline-primary {
+    color: #3498db;
+    border-color: #3498db;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #3498db;
+        color: white;
+    }
+
+.btn-outline-warning {
+    color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+    .btn-outline-warning:hover {
+        background-color: #2ecc71;
+        color: white;
+    }
+
+.btn-outline-danger {
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+
+.btn-group .btn {
+    margin: 0 0.3rem;
+}
+
+.btn-orange {
+    background-color: var(--main-orange);
+    border-color: var(--dark-orange);
+    color: white;
+}
+
+    .btn-orange:hover {
+        background-color: var(--dark-orange);
+        color: white;
+    }

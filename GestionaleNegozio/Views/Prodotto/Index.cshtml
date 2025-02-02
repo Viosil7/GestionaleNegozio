@@ -4,52 +4,85 @@
     ViewData["Title"] = "Product Management";
 }
 
-<h1>Product Management</h1>
+<div class="text-center mb-4">
+    <h1 class="display-4 text-orange">
+        <i class="bi bi-box-seam me-2"></i>Product Management
+    </h1>
+</div>
 
-@if (User.IsInRole("Manager"))
-{
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New Product</a>
-    </p>
-}
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descrizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prezzo)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+<div class="row justify-content-center mb-4">
+    <div class="col-xl-8">
+        @if (User.IsInRole("Manager"))
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                <td>@Html.DisplayFor(modelItem => item.Categoria)</td>
-                <td>@Html.DisplayFor(modelItem => item.Descrizione)</td>
-                <td>@Html.DisplayFor(modelItem => item.Prezzo)</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
-                    @if (User.IsInRole("Manager"))
-                    {
-                        <span>|</span>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <span>|</span>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
-                    }
-                </td>
-            </tr>
+            <a asp-action="Create" class="btn btn-orange">
+                <i class="bi bi-plus-circle me-2"></i>Create New Product
+            </a>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-xl-9">
+        <div class="card">
+            <div class="card-header bg-orange text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul me-2"></i>Product List
+                </h5>
+            </div>
+            <div class="card-body px-4">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%">
+                                    <i class="bi bi-tag me-2"></i>NAME
+                                </th>
+                                <th style="width: 15%">
+                                    <i class="bi bi-collection me-2"></i>CATEGORY
+                                </th>
+                                <th style="width: 25%">
+                                    <i class="bi bi-file-text me-2"></i>DESCRIPTION
+                                </th>
+                                <th style="width: 10%; text-align: center">
+                                    <i class="bi bi-currency-euro me-2"></i>PRICE
+                                </th>
+                                <th style="width: 35%; text-align: right">
+                                    <i class="bi bi-gear me-2"></i>ACTIONS
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nome</td>
+                                    <td>
+                                        <span class="badge bg-orange">
+                                            @item.Categoria
+                                        </span>
+                                    </td>
+                                    <td>@item.Descrizione</td>
+                                    <td style="text-align: center">€@item.Prezzo</td>
+                                    <td style="text-align: right">
+                                        <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@item.Id">
+                                            <i class="bi bi-info-circle"></i> Details
+                                        </a>
+                                        @if (User.IsInRole("Manager"))
+                                        {
+                                            <a class="btn btn-sm btn-outline-success" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
