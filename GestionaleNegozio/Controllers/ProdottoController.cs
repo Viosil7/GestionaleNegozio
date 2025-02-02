@@ -1,74 +1,145 @@
-﻿using GestionaleNegozio.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-[Authorize]
-public class ProdottoController : BaseController
+using GestionaleNegozio.Models;
+using GestionaleNegozio.Data.Interfaces;
+
+[Authorize(Roles = "Manager")]
+public class ProdottoController : Controller
 {
     private readonly ProdottoDao _prodottoDao;
+    private readonly MagazzinoDao _magazzinoDao;
+    private readonly NegozioDao _negozioDao;
 
-    public ProdottoController(IConfiguration configuration) : base(configuration)
+    public ProdottoController(IConfiguration configuration)
     {
-        _prodottoDao = new ProdottoDao(_connectionString);
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        _prodottoDao = new ProdottoDao(connectionString);
+        _magazzinoDao = new MagazzinoDao(connectionString);
+        _negozioDao = new NegozioDao(connectionString);
     }
 
-    public ActionResult Index()
+    public IActionResult Index()
     {
         var prodotti = _prodottoDao.GetAll();
         return View(prodotti);
     }
 
-    public ActionResult Details(int id)
+    public IActionResult Create()
     {
-        var prodotto = _prodottoDao.GetById(id);
-        if (prodotto == null) return NotFound();
-        return View(prodotto);
-    }
-
-    public ActionResult Create()
-    {
-        return View();
+        PrepareViewBags();
+        return View(new Prodotto());
     }
 
     [HttpPost]
-    public ActionResult Create(Prodotto prodotto)
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(Prodotto prodotto, Dictionary<int, int> inventory)
     {
         if (ModelState.IsValid)
         {
-            _prodottoDao.Insert(prodotto);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _prodottoDao.Insert(prodotto);
+
+                foreach (var entry in inventory)
+                {
+                    _magazzinoDao.UpdateQuantita(entry.Key, prodotto.Id, entry.Value);
+                }
+
+                TempData["Success"] = "Product created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error creating product: {ex.Message}";
+            }
         }
+
+        ViewBag.Negozi = _negozioDao.GetAll();
         return View(prodotto);
     }
-
-    public ActionResult Edit(int id)
+    public IActionResult Edit(int id)
     {
         var prodotto = _prodottoDao.GetById(id);
-        if (prodotto == null) return NotFound();
+        if (prodotto == null)
+        {
+            return NotFound();
+        }
+
+        PrepareViewBags(id);
         return View(prodotto);
     }
 
     [HttpPost]
-    public ActionResult Edit(Prodotto prodotto)
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, Prodotto prodotto, Dictionary<int, int> inventory)
     {
+        if (id != prodotto.Id)
+        {
+            return NotFound();
+        }
+
         if (ModelState.IsValid)
         {
-            _prodottoDao.Update(prodotto);
+            try
+            {
+                _prodottoDao.Update(prodotto);
+
+                foreach (var entry in inventory)
+                {
+                    _magazzinoDao.UpdateQuantita(entry.Key, prodotto.Id, entry.Value);
+                }
+
+                TempData["Success"] = "Product updated successfully";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error updating product: {ex.Message}";
+            }
             return RedirectToAction(nameof(Index));
         }
+
+        PrepareViewBags(id);
         return View(prodotto);
     }
 
-    public ActionResult Delete(int id)
+    public IActionResult Delete(int id)
     {
         var prodotto = _prodottoDao.GetById(id);
-        if (prodotto == null) return NotFound();
+        if (prodotto == null)
+        {
+            return NotFound();
+        }
         return View(prodotto);
     }
 
     [HttpPost, ActionName("Delete")]
-    public ActionResult DeleteConfirmed(int id)
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteConfirmed(int id)
     {
-        _prodottoDao.Delete(id);
+        try
+        {
+            _prodottoDao.Delete(id);
+            TempData["Success"] = "Product deleted successfully";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = $"Error deleting product: {ex.Message}";
+        }
         return RedirectToAction(nameof(Index));
+    }
+
+    private void PrepareViewBags(int? prodottoId = null)
+    {
+        ViewBag.Negozi = _negozioDao.GetAll();
+
+        var inventory = new Dictionary<int, int>();
+        if (prodottoId.HasValue)
+        {
+            foreach (var negozio in ViewBag.Negozi)
+            {
+                inventory[negozio.Id] = _magazzinoDao.GetQuantita(negozio.Id, prodottoId.Value);
+            }
+        }
+        ViewBag.Inventory = inventory;
     }
 }

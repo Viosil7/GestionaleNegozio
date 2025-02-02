@@ -120,26 +120,47 @@ public class ProdottoDao : BaseDao<Prodotto>, IProdottoDao
     public void Insert(Prodotto prodotto)
     {
         using var conn = CreateConnection();
-        using var cmd = new SqlCommand(
-            "INSERT INTO Prodotti (nome, categoria, descrizione, prezzo) VALUES (@Nome, @Categoria, @Descrizione, @Prezzo)", conn);
-        cmd.Parameters.AddWithValue("@Nome", prodotto.Nome);
-        cmd.Parameters.AddWithValue("@Categoria", prodotto.Categoria);
-        cmd.Parameters.AddWithValue("@Descrizione", (object)prodotto.Descrizione ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo);
         conn.Open();
-        cmd.ExecuteNonQuery();
+        using var transaction = conn.BeginTransaction();
+
+        try
+        {
+            using var cmd = new SqlCommand(
+                "INSERT INTO Prodotti (nome, categoria, descrizione, prezzo) " +
+                "OUTPUT INSERTED.Id " +
+                "VALUES (@Nome, @Categoria, @Descrizione, @Prezzo)",
+                conn, transaction);
+
+            cmd.Parameters.AddWithValue("@Nome", prodotto.Nome);
+            cmd.Parameters.AddWithValue("@Categoria", prodotto.Categoria);
+            cmd.Parameters.AddWithValue("@Descrizione", (object)prodotto.Descrizione ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo);
+
+            var newId = (int)cmd.ExecuteScalar();
+            prodotto.Id = newId;
+
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
     public void Update(Prodotto prodotto)
     {
         using var conn = CreateConnection();
         using var cmd = new SqlCommand(
-            "UPDATE Prodotti SET nome = @Nome, categoria = @Categoria, descrizione = @Descrizione, prezzo = @Prezzo WHERE Id = @Id", conn);
+            "UPDATE Prodotti SET nome = @Nome, categoria = @Categoria, descrizione = @Descrizione, prezzo = @Prezzo WHERE Id = @Id",
+            conn);
+
         cmd.Parameters.AddWithValue("@Id", prodotto.Id);
         cmd.Parameters.AddWithValue("@Nome", prodotto.Nome);
         cmd.Parameters.AddWithValue("@Categoria", prodotto.Categoria);
         cmd.Parameters.AddWithValue("@Descrizione", (object)prodotto.Descrizione ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo);
+        cmd.Parameters.AddWithValue("@Prezzo", prodotto.Prezzo);  // Ensure this is a decimal
+
         conn.Open();
         cmd.ExecuteNonQuery();
     }
@@ -147,10 +168,30 @@ public class ProdottoDao : BaseDao<Prodotto>, IProdottoDao
     public void Delete(int id)
     {
         using var conn = CreateConnection();
-        using var cmd = new SqlCommand("DELETE FROM Prodotti WHERE Id = @Id", conn);
-        cmd.Parameters.AddWithValue("@Id", id);
         conn.Open();
-        cmd.ExecuteNonQuery();
+        using var transaction = conn.BeginTransaction();
+
+        try
+        {
+            using var deleteInventoryCmd = new SqlCommand(
+                "DELETE FROM Magazzino WHERE idProdotto = @Id",
+                conn, transaction);
+            deleteInventoryCmd.Parameters.AddWithValue("@Id", id);
+            deleteInventoryCmd.ExecuteNonQuery();
+
+            using var deleteProductCmd = new SqlCommand(
+                "DELETE FROM Prodotti WHERE Id = @Id",
+                conn, transaction);
+            deleteProductCmd.Parameters.AddWithValue("@Id", id);
+            deleteProductCmd.ExecuteNonQuery();
+
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
     public bool Exists(int id)

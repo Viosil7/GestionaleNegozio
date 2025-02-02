@@ -8,26 +8,29 @@ public class MagazzinoDao : BaseDao<Magazzino>, IMagazzinoDao
 
     public List<Magazzino> GetByNegozio(int idNegozio)
     {
-        var magazzino = new List<Magazzino>();
+        var inventory = new List<Magazzino>();
         using var conn = CreateConnection();
         using var cmd = new SqlCommand(
-            "SELECT idNegozio, idProdotto, quantità " +
-            "FROM Magazzino WHERE idNegozio = @IdNegozio", conn);
+            "SELECT p.Id, COALESCE(m.quantità, 0) AS Quantità " +
+            "FROM Prodotti p " +
+            "LEFT JOIN Magazzino m ON p.Id = m.idProdotto AND m.idNegozio = @IdNegozio",
+            conn);
+
         cmd.Parameters.AddWithValue("@IdNegozio", idNegozio);
         conn.Open();
+
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            magazzino.Add(new Magazzino
+            inventory.Add(new Magazzino
             {
-                IdNegozio = reader.GetInt32(0),
-                IdProdotto = reader.GetInt32(1),
-                Quantità = reader.GetInt32(2)
+                IdProdotto = reader.GetInt32(0),
+                IdNegozio = idNegozio,
+                Quantità = reader.GetInt32(1)
             });
         }
-        return magazzino;
+        return inventory;
     }
-
     public List<Magazzino> GetByProdotto(int idProdotto)
     {
         var magazzino = new List<Magazzino>();
