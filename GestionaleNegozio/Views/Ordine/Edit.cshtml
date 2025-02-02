@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit Order";
 }
 
-<h1>Edit Order</h1>
+<h1>Modifica Ordine</h1>
 
 <hr />
 <div class="row">
@@ -21,10 +21,10 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">Product</label>
+                                        <label class="control-label">Prodotto</label>
                                         <select name="Items[@i].IdProdotto" class="form-control product-select"
                                                 asp-items="@(new SelectList(ViewBag.Prodotti, "Id", "Nome", Model.Items[i].IdProdotto))">
-                                            <option value="">Select a product...</option>
+                                            <option value="">Seleziona un prodotto...</option>
                                         </select>
                                         <input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
                                     </div>
@@ -48,14 +48,14 @@
             </div>
 
             <button type="button" class="btn btn-orange mb-3" id="addItem">
-                <i class="bi bi-plus-circle"></i> Add Item
+                <i class="bi bi-plus-circle"></i> Aggiungi Prodotto
             </button>
 
             <div class="form-group">
                 <label asp-for="IdNegozio" class="control-label">Store</label>
                 <select asp-for="IdNegozio" class="form-control"
                         asp-items="@(new SelectList(ViewBag.Negozi, "Id", "Città"))">
-                    <option value="">Select a store...</option>
+                    <option value="">Seleziona un negozio...</option>
                 </select>
                 <span asp-validation-for="IdNegozio" class="text-danger"></span>
             </div>
@@ -73,8 +73,8 @@
             </div>
 
             <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Salva" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Torna all'elenco</a>
             </div>
         </form>
     </div>

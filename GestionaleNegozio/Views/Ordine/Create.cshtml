@@ -6,7 +6,7 @@
 
 <div class="text-center mb-4">
     <h1 class="display-4 text-orange">
-        <i class="bi bi-cart-plus me-2"></i>Create New Order
+        <i class="bi bi-cart-plus me-2"></i>Crea Nuovo Ordine
     </h1>
 </div>
 
@@ -15,14 +15,13 @@
         <div class="card">
             <div class="card-header bg-orange text-white">
                 <h5 class="mb-0">
-                    <i class="bi bi-file-earmark-plus me-2"></i>New Order Details
+                    <i class="bi bi-file-earmark-plus me-2"></i>Dettagli Nuovo Ordine
                 </h5>
             </div>
             <div class="card-body px-4">
                 <form asp-action="Create" id="orderForm">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <!-- Order Items Section -->
                     <div class="order-items">
                         <div class="order-item card mb-3">
                             <div class="card-body">
@@ -31,7 +30,7 @@
                                         <div class="form-group">
                                             <label class="control-label">Product</label>
                                             <select name="Items[0].IdProdotto" class="form-control product-select">
-                                                <option value="">Select a product...</option>
+                                                <option value="">Seleziona un prodotto...</option>
                                                 @foreach (var p in ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>)
                                                 {
                                                     <option value="@p.Id">@p.Nome</option>
@@ -41,7 +40,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="control-label">Quantity</label>
+                                            <label class="control-label">Quantità</label>
                                             <input type="number" name="Items[0].Quantita" class="form-control" min="1" value="1" />
                                         </div>
                                     </div>
@@ -57,25 +56,23 @@
 
                     <div class="text-end mb-3">
                         <button type="button" class="btn btn-orange" id="addItem">
-                            <i class="bi bi-plus-circle me-2"></i>Add Item
+                            <i class="bi bi-plus-circle me-2"></i>Aggiungi Prodotto
                         </button>
                     </div>
 
-                    <!-- Store Selection -->
                     <div class="form-group mb-3">
-                        <label asp-for="IdNegozio" class="form-label">Store</label>
+                        <label asp-for="IdNegozio" class="form-label">Negozio</label>
                         <select asp-for="IdNegozio" class="form-select"
                                 asp-items="@(new SelectList(ViewBag.Negozi, "Id", "Città"))">
-                            <option value="">Select a store...</option>
+                            <option value="">Seleziona un Negozio...</option>
                         </select>
                         <span asp-validation-for="IdNegozio" class="text-danger"></span>
                     </div>
 
-                    <!-- Order Details -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label asp-for="DataOrdine" class="form-label">Order Date</label>
+                                <label asp-for="DataOrdine" class="form-label">Data Ordine</label>
                                 <input asp-for="DataOrdine" class="form-control" type="datetime-local"
                                        value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
                                 <span asp-validation-for="DataOrdine" class="text-danger"></span>
@@ -83,20 +80,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label asp-for="Nota" class="form-label">Notes</label>
+                                <label asp-for="Nota" class="form-label">Note</label>
                                 <textarea asp-for="Nota" class="form-control" rows="3"></textarea>
                                 <span asp-validation-for="Nota" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Form Actions -->
                     <div class="form-group mt-4">
                         <button type="submit" class="btn btn-orange">
-                            <i class="bi bi-check-circle me-2"></i>Create Order
+                            <i class="bi bi-check-circle me-2"></i>Crea Ordine
                         </button>
                         <a asp-action="Index" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+                            <i class="bi bi-arrow-left-circle me-2"></i>Torna all'elenco
                         </a>
                     </div>
                 </form>
@@ -116,7 +112,7 @@
 
             $("#addItem").click(function () {
                 itemIndex++;
-                let options = '<option value="">Select a product...</option>';
+                let options = '<option value="">Seleziona un prodotto...</option>';
                 prodotti.forEach(function (p) {
                     options += `<option value="${p.id}">${p.nome}</option>`;
                 });
@@ -127,7 +123,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Product</label>
+                                        <label class="control-label">Prodotto</label>
                                         <select name="Items[${itemIndex}].IdProdotto" class="form-control product-select">
                                             ${options}
                                         </select>
@@ -135,7 +131,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="control-label">Quantity</label>
+                                        <label class="control-label">Quantità</label>
                                         <input type="number" name="Items[${itemIndex}].Quantita"
                                                class="form-control" min="1" value="1" />
                                     </div>
@@ -154,7 +150,6 @@
             $(document).on("click", ".remove-item", function () {
                 if ($(".order-item").length > 1) {
                     $(this).closest(".order-item").remove();
-                    // Re-index remaining items
                     itemIndex = 0;
                     $(".order-item").each(function (index) {
                         $(this).find('select, input').each(function () {
