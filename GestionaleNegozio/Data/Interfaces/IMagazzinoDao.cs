@@ -53,5 +53,7 @@ namespace GestionaleNegozio.Data.Interfaces
         /// </summary>
         /// <returns>The total monetary value of all inventory</returns>
         decimal GetInventoryValue();
+
+        void CreateProductRecord(int idNegozio, int idProdotto, int quantita);
     }
 }
