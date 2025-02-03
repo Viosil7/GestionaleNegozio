@@ -6,12 +6,12 @@
 
 <div class="text-center mb-4">
     <h1 class="display-4 text-orange">
-        <i class="bi bi-people me-2"></i>Gestione Staff
+        <i class="bi bi-people me-2"></i> Gestione Staff
     </h1>
 </div>
 
-<div class="row justify-content-center mb-4">
-    <div class="col-xl-8">
+<div class="row mb-2">
+    <div class="col-xl text-end">
         @if (User.IsInRole("Manager"))
         {
             <a asp-action="Create" class="btn btn-orange">
@@ -22,7 +22,7 @@
 </div>
 
 <div class="row justify-content-center">
-    <div class="col-xl-9">
+    <div class="col-xl">
         <div class="card">
             <div class="card-header bg-orange text-white">
                 <h5 class="mb-0">
@@ -34,13 +34,13 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th style="width: 30%">
+                                <th>
                                     <i class="bi bi-person me-2"></i>USERNAME
                                 </th>
-                                <th style="width: 30%; text-align: center">
+                                <th style="text-align: center">
                                     <i class="bi bi-shield me-2"></i>RUOLO
                                 </th>
-                                <th style="width: 30%; text-align: right">
+                                <th style="text-align: right">
                                     <i class="bi bi-gear me-2"></i>AZIONI
                                 </th>
                             </tr>

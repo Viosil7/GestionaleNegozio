@@ -90,7 +90,7 @@
                                         <a asp-controller="Ordine"
                                            asp-action="Details"
                                            asp-route-id="@order.Id"
-                                           class="btn btn-sm btn-orange">
+                                           class="btn btn-sm btn-orange-outline">
                                             <i class="bi bi-eye me-2"></i>Dettaglio Ordine
                                         </a>
                                     </td>
@@ -175,5 +175,15 @@
 
     .text-muted {
         font-size: 0.9em;
+    }
+
+    .btn-orange-outline {
+        border: 1px solid #FF6B35;
+        color: #FF6B35;
+    }
+
+    .btn-orange-outline:hover {
+        background-color: #FF6B35;
+        color: white;
     }
 </style>
