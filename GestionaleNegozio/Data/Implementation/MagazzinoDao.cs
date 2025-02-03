@@ -163,4 +163,15 @@ public class MagazzinoDao : BaseDao<Magazzino>, IMagazzinoDao
         return magazzino;
     }
 
+        public void CreateProductRecord(int idNegozio, int idProdotto, int quantita)
+    {
+        using var conn = CreateConnection();
+        using var cmd = new SqlCommand("INSERT INTO Magazzino (idNegozio, idProdotto, quantità) VALUES (@IdNegozio, @IdProdotto, @Quantita)", conn);
+        cmd.Parameters.AddWithValue("@Quantita", quantita);
+        cmd.Parameters.AddWithValue("@IdNegozio", idNegozio);
+        cmd.Parameters.AddWithValue("@IdProdotto", idProdotto);
+        conn.Open();
+        cmd.ExecuteNonQuery();
+    }
+
 }

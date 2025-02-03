@@ -42,7 +42,7 @@ public class ProdottoController : Controller
 
                 foreach (var entry in inventory)
                 {
-                    _magazzinoDao.UpdateQuantita(entry.Key, prodotto.Id, entry.Value);
+                    _magazzinoDao.CreateProductRecord(entry.Key, prodotto.Id, entry.Value);
                 }
 
                 TempData["Success"] = "Product created successfully!";

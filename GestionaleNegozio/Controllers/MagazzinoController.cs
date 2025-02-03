@@ -51,7 +51,7 @@ public class MagazzinoController : BaseController
         {
             TempData["Error"] = "Error updating quantity.";
         }
-        return RedirectToAction(nameof(GetByNegozio), new { idNegozio });
+        return RedirectToAction("LowStock", "Magazzino");
     }
 
     public ActionResult LowStock(int threshold = 10)
