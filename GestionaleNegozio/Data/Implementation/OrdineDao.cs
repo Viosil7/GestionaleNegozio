@@ -1,5 +1,7 @@
 ﻿using GestionaleNegozio.Models;
 using Microsoft.Data.SqlClient;
+using GestionaleNegozio.Data.Interfaces;
+
 
 public class OrdineDao : BaseDao<OrderViewModel>, IOrdineDao
 {
