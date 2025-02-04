@@ -222,3 +222,12 @@ body {
         background-color: var(--dark-orange);
         color: white;
     }
+.search-box {
+    border-radius: 20px;
+    border: 1px solid var(--main-orange);
+}
+
+    .search-box:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25);
+        border-color: var(--main-orange);
+    }

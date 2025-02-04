@@ -18,9 +18,15 @@ public class ProdottoController : Controller
         _negozioDao = new NegozioDao(connectionString);
     }
 
-    public IActionResult Index()
+    
+    public IActionResult Index(string searchTerm)
     {
-        var prodotti = _prodottoDao.GetAll();
+        ViewBag.CurrentSearch = searchTerm;
+
+        var prodotti = string.IsNullOrEmpty(searchTerm)
+            ? _prodottoDao.GetAll()
+            : _prodottoDao.Search(searchTerm);
+
         return View(prodotti);
     }
 

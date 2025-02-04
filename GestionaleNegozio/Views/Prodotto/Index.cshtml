@@ -10,19 +10,30 @@
     </h1>
 </div>
 
-<div class="row mb-2">
-    <div class="col-xl text-end">
-        @if (User.IsInRole("Manager"))
-        {
-            <a asp-action="Create" class="btn btn-orange">
-                <i class="bi bi-plus-circle me-2"></i>Crea Nuovo Prodotto
-            </a>
-        }
-    </div>
-</div>
+
 
 <div class="row justify-content-center">
     <div class="col-xl">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <form asp-action="Index" method="get" class="d-flex">
+                    <input type="text" name="searchTerm" class="form-control me-2"
+                           placeholder="Cerca per nome o descrizione..."
+                           value="@ViewBag.CurrentSearch">
+                    <button type="submit" class="btn btn-orange">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6 text-end">
+                @if (User.IsInRole("Manager"))
+                {
+                    <a asp-action="Create" class="btn btn-orange">
+                        <i class="bi bi-plus-circle me-2"></i>Crea Nuovo Prodotto
+                    </a>
+                }
+            </div>
+        </div>
         <div class="card">
             <div class="card-header bg-orange text-white">
                 <h5 class="mb-0">
