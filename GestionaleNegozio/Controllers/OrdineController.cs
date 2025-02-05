@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using GestionaleNegozio.Models;
 using System.Transactions;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace GestionaleNegozio.Controllers
 {
@@ -11,6 +14,8 @@ namespace GestionaleNegozio.Controllers
         private readonly OrdineDao _ordineDao;
         private readonly NegozioDao _negozioDao;
         private readonly ProdottoDao _prodottoDao;
+        private readonly MagazzinoDao _magazzinoDao;
+        private OrderViewModel _orderViewModel;
 
         public OrdineController(IConfiguration configuration) : base(configuration)
         {
@@ -78,7 +83,28 @@ namespace GestionaleNegozio.Controllers
             {
                 if (ModelState.IsValid && model.Items != null && model.Items.Any())
                 {
+                    
+                    List<OrderItem> unavailableItems = new();
+                    foreach (var item in model.Items)
+                    {
+                        if (_magazzinoDao.IsDisponibile(model.IdNegozio, item.IdProdotto, item.Quantita) == false)
+                            unavailableItems.Add(item);
+                    }
+
+                    if (unavailableItems.Count > 0)
+                    {
+                        ViewBag.Negozi = _negozioDao.GetAll();
+                        ViewBag.Prodotti = _prodottoDao.GetAll();
+                        return View(model);
+                    }
                     _ordineDao.Insert(model);
+
+                    foreach (var item in model.Items)
+                    {
+                        int stock = _magazzinoDao.GetQuantita(model.IdNegozio, item.IdProdotto);
+                        _magazzinoDao.UpdateQuantita(model.IdNegozio, item.IdProdotto, (stock - item.Quantita));
+                    }
+
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -126,7 +152,50 @@ namespace GestionaleNegozio.Controllers
             {
                 if (ModelState.IsValid && model.Items != null && model.Items.Any())
                 {
+                    List<OrderItem> unavailableItems = new();
+                    var listaVecchia = _ordineDao.GetById(model.Id).Items;
+
+                    var listaIntersezione = from newItem in model.Items
+                                    join oldItem in listaVecchia on newItem.IdProdotto equals oldItem.IdProdotto
+                                    select new { newItem, oldItem };
+
+                    var listaAggiunti = model.Items
+                        .GroupJoin(listaVecchia, newItem => newItem.IdProdotto, oldItem => oldItem.IdProdotto, (newItem, matching) => new { newItem, matching })
+                        .Where(x => !x.matching.Any())
+                        .Select(x => x.newItem);
+
+                    foreach (var item in listaIntersezione)
+                    {
+                        if (_magazzinoDao.IsDisponibile(model.IdNegozio, item.newItem.IdProdotto, item.newItem.Quantita - item.oldItem.Quantita) == false)
+                            unavailableItems.Add(item.newItem);
+                    }
+                    foreach (var item in listaAggiunti)
+                    {
+                        if (_magazzinoDao.IsDisponibile(model.IdNegozio, item.IdProdotto, item.Quantita) == false)
+                            unavailableItems.Add(item);
+                    }
+                
+
+                    if (unavailableItems.Count > 0)
+                    {
+                        ViewBag.Negozi = _negozioDao.GetAll();
+                        ViewBag.Prodotti = _prodottoDao.GetAll();
+                        return View(model);
+                    }
+
                     _ordineDao.Update(model);
+
+                    foreach (var item in listaIntersezione)
+                    {
+                        int stock = _magazzinoDao.GetQuantita(model.IdNegozio, item.newItem.IdProdotto);
+                        _magazzinoDao.UpdateQuantita(model.IdNegozio, item.newItem.IdProdotto, (stock - (item.newItem.Quantita - item.oldItem.Quantita)));
+                    }
+                    foreach (var item in listaAggiunti)
+                    {
+                        int stock = _magazzinoDao.GetQuantita(model.IdNegozio, item.IdProdotto);
+                        _magazzinoDao.UpdateQuantita(model.IdNegozio, item.IdProdotto, (stock - item.Quantita));
+                    }
+
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -172,7 +241,14 @@ namespace GestionaleNegozio.Controllers
         {
             try
             {
+                var order = _ordineDao.GetById(id);
+                foreach (var item in order.Items)
+                {
+                    int stock = _magazzinoDao.GetQuantita(order.IdNegozio, item.IdProdotto);
+                    _magazzinoDao.UpdateQuantita(order.IdNegozio, item.IdProdotto, (stock + item.Quantita));
+                }
                 _ordineDao.Delete(id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
