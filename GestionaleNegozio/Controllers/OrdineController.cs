@@ -15,13 +15,13 @@ namespace GestionaleNegozio.Controllers
         private readonly NegozioDao _negozioDao;
         private readonly ProdottoDao _prodottoDao;
         private readonly MagazzinoDao _magazzinoDao;
-        private OrderViewModel _orderViewModel;
 
         public OrdineController(IConfiguration configuration) : base(configuration)
         {
             _ordineDao = new OrdineDao(_connectionString);
             _negozioDao = new NegozioDao(_connectionString);
             _prodottoDao = new ProdottoDao(_connectionString);
+            _magazzinoDao = new MagazzinoDao(_connectionString);
         }
 
         public ActionResult Index()
