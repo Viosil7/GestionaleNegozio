@@ -109,6 +109,56 @@
         $(document).ready(function () {
             let itemIndex = 0;
             const prodotti = @Html.Raw(Json.Serialize(ViewBag.Prodotti));
+            let prodottiCorrenti = @Html.Raw(Json.Serialize(Model.Items));
+
+            if (prodottiCorrenti && prodottiCorrenti.length > 0){
+
+                $(".order-item").remove();
+           
+                prodottiCorrenti.forEach((prod, index) => {
+                
+                let options = '<option value="">Seleziona un prodotto...</option>';
+                prodotti.forEach(function (p) {
+                    if (p.id == prod.idProdotto) {
+                        options += `<option value="${p.id}" selected>${p.nome}</option>`;
+                    }
+                    else{
+                        options += `<option value="${p.id}">${p.nome}</option>`;
+                    }
+                });
+            
+                    let newItem = `
+                        <div class="order-item card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Prodotto</label>
+                                            <select name="Items[${index}].IdProdotto" class="form-control product-select">
+                                                ${options}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Quantità</label>
+                                            <input type="number" name="Items[${index}].Quantita"
+                                                   class="form-control" min="1" value="` + (prod.quantita) + `" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger remove-item mt-4">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                $(".order-items").append(newItem);
+                });
+                itemIndex = prodottiCorrenti.length - 1;
+            }
 
             $("#addItem").click(function () {
                 itemIndex++;

@@ -83,16 +83,22 @@ namespace GestionaleNegozio.Controllers
             {
                 if (ModelState.IsValid && model.Items != null && model.Items.Any())
                 {
-                    
                     List<OrderItem> unavailableItems = new();
+                    List<string> unavItemsNames = new();
+                    string aggregatedNames = string.Empty;
                     foreach (var item in model.Items)
                     {
                         if (_magazzinoDao.IsDisponibile(model.IdNegozio, item.IdProdotto, item.Quantita) == false)
+                        {
+                            unavItemsNames.Add(_prodottoDao.GetById(item.IdProdotto).Nome);
+                            aggregatedNames = unavItemsNames.Aggregate((current, next) => current + ", " + next);
                             unavailableItems.Add(item);
+                        }
                     }
 
                     if (unavailableItems.Count > 0)
                     {
+                        ModelState.AddModelError($"", $"I seguenti prodotti non sono disponibili nella quantità selezionata: {aggregatedNames}.");
                         ViewBag.Negozi = _negozioDao.GetAll();
                         ViewBag.Prodotti = _prodottoDao.GetAll();
                         return View(model);
