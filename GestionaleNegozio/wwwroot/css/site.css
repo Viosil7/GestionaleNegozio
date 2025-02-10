@@ -28,6 +28,7 @@ body {
     margin-bottom: 60px;
     min-height: 100vh;
     position: relative;
+    padding-bottom: 60px;
 }
 
 @keyframes bg-scrolling {
@@ -115,8 +116,8 @@ body {
         border-color: var(--main-orange);
     }
 
-.footer {
-    position: absolute;
+footer {
+    position: fixed;
     bottom: 0;
     width: 100%;
     font-size: 0.9rem;
