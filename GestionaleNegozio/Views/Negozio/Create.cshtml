@@ -14,13 +14,19 @@
 
             <div class="form-group">
                 <label asp-for="Regione" class="control-label"></label>
-                <input asp-for="Regione" class="form-control" />
+                <select asp-for="Regione" class="form-control" id="regioneSelect">
+                    <option value="">Seleziona una regione</option>
+                    <option value="Lazio">Lazio</option>
+                    <option value="Campania">Campania</option>
+                </select>
                 <span asp-validation-for="Regione" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Città" class="control-label"></label>
-                <input asp-for="Città" class="form-control" />
+                <select asp-for="Città" class="form-control" id="cittaSelect">
+                    <option value="">Seleziona prima una regione</option>
+                </select>
                 <span asp-validation-for="Città" class="text-danger"></span>
             </div>
 
@@ -42,4 +48,26 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $(document).ready(function () {
+            const cities = {
+                'Lazio': ['Roma', 'Latina', 'Frosinone', 'Viterbo', 'Rieti'],
+                'Campania': ['Napoli', 'Salerno', 'Caserta', 'Avellino', 'Benevento']
+            };
+
+            $('#regioneSelect').change(function () {
+                const selectedRegion = $(this).val();
+                const cittaSelect = $('#cittaSelect');
+                cittaSelect.empty();
+                cittaSelect.append('<option value="">Seleziona una città</option>');
+
+                if (selectedRegion) {
+                    cities[selectedRegion].forEach(function (city) {
+                        cittaSelect.append(`<option value="${city}">${city}</option>`);
+                    });
+                }
+            });
+        });
+    </script>
 }

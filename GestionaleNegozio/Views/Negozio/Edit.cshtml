@@ -15,13 +15,19 @@
 
             <div class="form-group">
                 <label asp-for="Regione" class="control-label"></label>
-                <input asp-for="Regione" class="form-control" />
+                <select asp-for="Regione" class="form-control" id="regioneSelect">
+                    <option value="">Seleziona una regione</option>
+                    <option value="Lazio" selected="@(Model.Regione == "Lazio")">Lazio</option>
+                    <option value="Campania" selected="@(Model.Regione == "Campania")">Campania</option>
+                </select>
                 <span asp-validation-for="Regione" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Città" class="control-label"></label>
-                <input asp-for="Città" class="form-control" />
+                <select asp-for="Città" class="form-control" id="cittaSelect">
+                    <option value="">Seleziona una città</option>
+                </select>
                 <span asp-validation-for="Città" class="text-danger"></span>
             </div>
 
@@ -40,7 +46,37 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function () {
+            const cities = {
+                'Lazio': ['Roma', 'Latina', 'Frosinone', 'Viterbo', 'Rieti'],
+                'Campania': ['Napoli', 'Salerno', 'Caserta', 'Avellino', 'Benevento']
+            };
+
+            function populateCities(selectedRegion, selectedCity = '') {
+                const cittaSelect = $('#cittaSelect');
+                cittaSelect.empty();
+                cittaSelect.append('<option value="">Seleziona una città</option>');
+
+                if (selectedRegion && cities[selectedRegion]) {
+                    cities[selectedRegion].forEach(function (city) {
+                        cittaSelect.append(`<option value="${city}" ${city === selectedCity ? 'selected' : ''}>${city}</option>`);
+                    });
+                }
+            }
+
+            const initialRegion = '@Model.Regione';
+            const initialCity = '@Model.Città';
+            if (initialRegion) {
+                populateCities(initialRegion, initialCity);
+            }
+
+            $('#regioneSelect').change(function () {
+                const selectedRegion = $(this).val();
+                populateCities(selectedRegion);
+            });
+        });
+    </script>
 }
