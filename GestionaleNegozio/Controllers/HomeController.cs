@@ -19,19 +19,26 @@ namespace GestionaleNegozio.Controllers
             _prodottoDao = new ProdottoDao(_connectionString);
         }
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(int page = 1, int orderPage = 1)
         {
             const int pageSize = 5;
 
-            var orders = _ordineDao.GetRecentOrders(5);
-            var ordersWithDetails = orders.Select(o => new
-            {
-                Id = o.Id,
-                StoreName = _negozioDao.GetById(o.IdNegozio)?.Città ?? "Unknown",
-                Date = o.DataOrdine.ToString("dd/MM/yyyy HH:mm"),
-                TotalItems = o.Items.Sum(i => i.Quantita),
-                Nota = o.Nota
-            }).ToList();
+            var allOrders = _ordineDao.GetRecentOrders(50);
+            var ordersWithDetails = allOrders
+                .Select(o => new
+                {
+                    Id = o.Id,
+                    StoreName = _negozioDao.GetById(o.IdNegozio)?.Città ?? "Unknown",
+                    Date = o.DataOrdine.ToString("dd/MM/yyyy HH:mm"),
+                    TotalItems = o.Items.Sum(i => i.Quantita),
+                    Nota = o.Nota
+                })
+                .ToList();
+
+            var paginatedOrders = ordersWithDetails
+                .Skip((orderPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             var allLowStockItems = _magazzinoDao.GetLowStock(10)
                 .Select(m => new
@@ -46,13 +53,16 @@ namespace GestionaleNegozio.Controllers
                 .Take(pageSize)
                 .ToList();
 
-            ViewBag.RecentOrders = ordersWithDetails;
+            ViewBag.RecentOrders = paginatedOrders;
             ViewBag.LowStockItems = lowStockItems;
-            ViewBag.RecentOrdersCount = orders.Count;
+            ViewBag.RecentOrdersCount = allOrders.Count;
             ViewBag.LowStockCount = allLowStockItems.Count;
             ViewBag.ActiveStoresCount = _negozioDao.GetAll().Count;
+
             ViewBag.CurrentPage = page;
+            ViewBag.CurrentOrderPage = orderPage;
             ViewBag.TotalPages = (int)Math.Ceiling(allLowStockItems.Count / (double)pageSize);
+            ViewBag.TotalOrderPages = (int)Math.Ceiling(allOrders.Count / (double)pageSize);
 
             return View();
         }

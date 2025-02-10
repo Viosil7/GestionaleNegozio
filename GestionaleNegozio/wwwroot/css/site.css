@@ -30,7 +30,9 @@ body {
     position: relative;
     padding-bottom: 60px;
 }
-
+html, body {
+    overflow-y: hidden;
+}
 @keyframes bg-scrolling {
     0% {
         background-position: -50px 50px;
