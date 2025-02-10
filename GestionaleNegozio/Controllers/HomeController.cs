@@ -19,8 +19,10 @@ namespace GestionaleNegozio.Controllers
             _prodottoDao = new ProdottoDao(_connectionString);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            const int pageSize = 5;
+
             var orders = _ordineDao.GetRecentOrders(5);
             var ordersWithDetails = orders.Select(o => new
             {
@@ -31,7 +33,7 @@ namespace GestionaleNegozio.Controllers
                 Nota = o.Nota
             }).ToList();
 
-            var lowStockItems = _magazzinoDao.GetLowStock(10)
+            var allLowStockItems = _magazzinoDao.GetLowStock(10)
                 .Select(m => new
                 {
                     ProductName = _prodottoDao.GetById(m.IdProdotto)?.Nome ?? "Unknown",
@@ -39,11 +41,18 @@ namespace GestionaleNegozio.Controllers
                     m.Quantità
                 }).ToList();
 
+            var lowStockItems = allLowStockItems
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
             ViewBag.RecentOrders = ordersWithDetails;
             ViewBag.LowStockItems = lowStockItems;
             ViewBag.RecentOrdersCount = orders.Count;
-            ViewBag.LowStockCount = lowStockItems.Count;
+            ViewBag.LowStockCount = allLowStockItems.Count;
             ViewBag.ActiveStoresCount = _negozioDao.GetAll().Count;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(allLowStockItems.Count / (double)pageSize);
 
             return View();
         }

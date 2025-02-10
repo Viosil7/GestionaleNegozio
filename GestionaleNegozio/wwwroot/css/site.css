@@ -234,3 +234,19 @@ footer {
         box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25);
         border-color: var(--main-orange);
     }
+.pagination .page-link {
+    color: #FF6B35;
+    border-color: #FF6B35;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #FF6B35;
+    border-color: #FF6B35;
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: rgba(255,107,53,0.1);
+    border-color: #FF6B35;
+    color: #FF6B35;
+}
