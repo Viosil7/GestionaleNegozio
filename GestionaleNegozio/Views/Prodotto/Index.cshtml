@@ -10,7 +10,6 @@
     </h1>
 </div>
 
-
 <div class="row mb-2">
     <div class="col-xl text-end">
         @if (User.IsInRole("Manager"))
@@ -21,6 +20,7 @@
         }
     </div>
 </div>
+
 <div class="row justify-content-center">
     <div class="col-xl">
         <div class="card">
@@ -31,7 +31,7 @@
                     </h5>
                     <div class="col-md-6">
                         <form asp-action="Index" method="get" class="d-flex">
-                            <input type="text" name="searchTerm" class="form-control me-2"
+                            <input type="text" name="searchTerm" class="form-control me-2 search-box"
                                    placeholder="Cerca per nome o descrizione..."
                                    value="@ViewBag.CurrentSearch">
                             <button type="submit" class="btn btn-light">
@@ -93,8 +93,62 @@
                             }
                         </tbody>
                     </table>
+
+                    @if (ViewBag.TotalPages > 1)
+                    {
+                        <nav aria-label="Product navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                        <a class="page-link"
+                                           href="@Url.Action("Index", new { page = i, searchTerm = ViewBag.CurrentSearch })">
+                                            @i
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .table th {
+        border-top: none;
+        color: #666;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .pagination .page-link {
+        color: #FF6B35;
+        border-color: #FF6B35;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #FF6B35;
+        border-color: #FF6B35;
+        color: white;
+    }
+
+    .pagination .page-link:hover {
+        background-color: rgba(255,107,53,0.1);
+        border-color: #FF6B35;
+        color: #FF6B35;
+    }
+
+    .search-box {
+        border-radius: 20px;
+        border: 1px solid white;
+    }
+
+        .search-box:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.25);
+            border-color: white;
+        }
+</style>

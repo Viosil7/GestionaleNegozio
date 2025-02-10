@@ -18,17 +18,27 @@ public class ProdottoController : Controller
         _negozioDao = new NegozioDao(connectionString);
     }
 
-    
-    public IActionResult Index(string searchTerm)
+
+    public IActionResult Index(string searchTerm, int page = 1)
     {
+        const int pageSize = 7;
         ViewBag.CurrentSearch = searchTerm;
 
-        var prodotti = string.IsNullOrEmpty(searchTerm)
+        var allProducts = string.IsNullOrEmpty(searchTerm)
             ? _prodottoDao.GetAll()
             : _prodottoDao.Search(searchTerm);
 
-        return View(prodotti);
+        var paginatedProducts = allProducts
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = (int)Math.Ceiling(allProducts.Count() / (double)pageSize);
+
+        return View(paginatedProducts);
     }
+
 
     public IActionResult Create()
     {

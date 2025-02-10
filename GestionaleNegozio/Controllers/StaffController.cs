@@ -17,10 +17,38 @@ namespace GestionaleNegozio.Controllers
         }
 
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(string searchTerm, int page = 1)
         {
-            var staff = _staffDao.GetAll();
-            return View(staff);
+            try
+            {
+                const int pageSize = 7;
+                ViewBag.CurrentSearch = searchTerm;
+
+                var allStaff = _staffDao.GetAll();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    allStaff = allStaff.Where(s =>
+                        s.Username.ToLower().Contains(searchTerm) ||
+                        s.Ruolo.ToLower().Contains(searchTerm)
+                    ).ToList();
+                }
+
+                var paginatedStaff = allStaff
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                ViewBag.CurrentPage = page;
+                ViewBag.TotalPages = (int)Math.Ceiling(allStaff.Count() / (double)pageSize);
+
+                return View(paginatedStaff);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [Authorize]

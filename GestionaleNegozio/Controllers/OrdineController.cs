@@ -24,14 +24,39 @@ namespace GestionaleNegozio.Controllers
             _magazzinoDao = new MagazzinoDao(_connectionString);
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string searchTerm, int page = 1)
         {
             try
             {
-                ViewBag.Negozi = _negozioDao.GetAll();
-                ViewBag.Prodotti = _prodottoDao.GetAll();
-                var orders = _ordineDao.GetAll();
-                return View(orders);
+                const int pageSize = 7;
+
+                var negozi = _negozioDao.GetAll();      
+                var prodotti = _prodottoDao.GetAll();      
+                ViewBag.Negozi = negozi;
+                ViewBag.Prodotti = prodotti;
+
+                var allOrders = _ordineDao.GetAll().ToList();
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    searchTerm = searchTerm.ToLower();
+                    allOrders = allOrders.Where(o =>
+                        (!string.IsNullOrEmpty(o.Nota) && o.Nota.ToLower().Contains(searchTerm)) ||
+                        (negozi.FirstOrDefault(n => n.Id == o.IdNegozio)?.Città?.ToLower().Contains(searchTerm) ?? false) ||
+                        o.DataOrdine.ToString("dd/MM/yyyy").Contains(searchTerm)
+                    ).ToList();
+                }
+
+                var paginatedOrders = allOrders
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                ViewBag.CurrentSearch = searchTerm;
+                ViewBag.CurrentPage = page;
+                ViewBag.TotalPages = (int)Math.Ceiling(allOrders.Count / (double)pageSize);
+
+                return View(paginatedOrders);
             }
             catch (Exception ex)
             {
