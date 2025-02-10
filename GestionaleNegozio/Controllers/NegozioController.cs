@@ -14,19 +14,28 @@ namespace GestionaleNegozio.Controllers
             _negozioDao = new NegozioDao(_connectionString);
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
             try
             {
-                var negozi = _negozioDao.GetAll();
-                return View(negozi);
+                const int PageSize = 10;
+                var allStores = _negozioDao.GetAll().ToList();
+
+                var paginatedStores = allStores
+                    .Skip((page - 1) * PageSize)
+                    .Take(PageSize)
+                    .ToList();
+
+                ViewBag.CurrentPage = page;
+                ViewBag.TotalPages = (int)Math.Ceiling(allStores.Count / (double)PageSize);
+
+                return View(paginatedStores);
             }
             catch (Exception ex)
             {
                 return RedirectToAction("Error", "Home");
             }
         }
-
         public ActionResult Details(int id)
         {
             try

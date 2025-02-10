@@ -78,6 +78,20 @@
                             }
                         </tbody>
                     </table>
+
+                    @if (ViewBag.TotalPages > 1)
+                    {
+                        <nav aria-label="Store navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
                 </div>
             </div>
         </div>
@@ -95,5 +109,22 @@
 
     .btn-group .btn {
         margin: 0 0.3rem;
+    }
+
+    .pagination .page-link {
+        color: #FF6B35;
+        border-color: #FF6B35;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #FF6B35;
+        border-color: #FF6B35;
+        color: white;
+    }
+
+    .pagination .page-link:hover {
+        background-color: rgba(255,107,53,0.1);
+        border-color: #FF6B35;
+        color: #FF6B35;
     }
 </style>
