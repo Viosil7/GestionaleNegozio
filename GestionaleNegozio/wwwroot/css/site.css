@@ -250,3 +250,62 @@ footer {
     border-color: #FF6B35;
     color: #FF6B35;
 }
+.hover-bg:hover {
+    background-color: rgba(255,107,53,0.05);
+    transition: background-color 0.3s ease;
+}
+
+.inventory-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+    .inventory-item:hover {
+        border-color: var(--main-orange);
+        box-shadow: 0 2px 4px rgba(255,107,53,0.1);
+    }
+
+.form-control-lg {
+    height: 50px;
+    font-size: 1.1rem;
+}
+
+.input-group-text {
+    background-color: var(--main-orange);
+    color: white;
+    border-color: var(--main-orange);
+}
+
+.card-header h1 {
+    font-weight: 600;
+}
+
+.form-label {
+    color: #495057;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.card-header.bg-orange h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+textarea.form-control-lg {
+    min-height: 120px;
+}
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
