@@ -6,11 +6,11 @@
     var prodotti = ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>;
 }
 
-<h1>Inventory for @negozio.Città Store</h1>
+<h1>Inventario per @negozio.Città Store</h1>
 <h4>@negozio.Indirizzo, @negozio.Regione</h4>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to Stores List</a>
+    <a asp-action="Index" class="btn btn-secondary">Torna alla lista negozi</a>
 </div>
 
 <table class="table table-striped">
@@ -65,7 +65,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Update Quantity - @prodotto.Nome</h5>
+                                    <h5 class="modal-title">Aggiorna Quantità - @prodotto.Nome</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <form asp-action="UpdateQuantita">

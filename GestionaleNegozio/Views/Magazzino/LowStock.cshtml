@@ -6,23 +6,23 @@
     var prodotti = ViewBag.Prodotti as IEnumerable<GestionaleNegozio.Models.Prodotto>;
 }
 
-<h1>Low Stock Items</h1>
+<h1>Prodotti Low Stock</h1>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
+    <a asp-action="Index" class="btn btn-secondary">Torna all'inventario</a>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Store</th>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Quantity</th>
+            <th>Prodotto</th>
+            <th>Categoria</th>
+            <th>Prezzo</th>
+            <th>Quantità</th>
             @if (User.IsInRole("Manager"))
             {
-                <th>Actions</th>
+                <th>Azioni</th>
             }
         </tr>
     </thead>
@@ -46,7 +46,7 @@
                                     class="btn btn-primary btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#updateModal@(item.IdNegozio)@(item.IdProdotto)">
-                                Update Quantity
+                                Aggiorna Quantità
                             </button>
                         </td>
                     }
@@ -59,7 +59,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Update Quantity - @prodotto.Nome at @negozio.Città</h5>
+                                    <h5 class="modal-title">Aggiorna Quantità - @prodotto.Nome at @negozio.Città</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <form asp-action="UpdateQuantita">
@@ -73,8 +73,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                        <button type="submit" class="btn btn-primary">Salva modifiche</button>
                                     </div>
                                 </form>
                             </div>
@@ -89,6 +89,6 @@
 @if (!Model.Any())
 {
     <div class="alert alert-success">
-        No low stock items found. All inventory levels are good!
+        Nessun prodotto low stock trovato. Tutti i prodotti hanno un buon livello di scorta!
     </div>
 }

@@ -15,10 +15,30 @@ public class MagazzinoController : BaseController
         _prodottoDao = new ProdottoDao(_connectionString);
     }
 
-    public ActionResult Index()
+    public ActionResult Index(string searchTerm, int page = 1)
     {
-        var negozi = _negozioDao.GetAll();
-        return View(negozi);
+        const int PageSize = 10;
+        var allStores = _negozioDao.GetAll().ToList();
+
+        if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                allStores = allStores.Where(s =>
+                    s.Città.ToLower().Contains(searchTerm) ||
+                    s.Regione.ToLower().Contains(searchTerm)
+                ).ToList();
+            }
+        
+        var paginatedStores = allStores
+            .Skip((page - 1) * PageSize)
+            .Take(PageSize)
+            .ToList();
+
+        ViewBag.CurrentSearch = searchTerm;
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = (int)Math.Ceiling(allStores.Count / (double)PageSize);
+
+        return View(paginatedStores);
     }
 
     public ActionResult GetByNegozio(int idNegozio)

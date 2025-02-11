@@ -9,20 +9,20 @@
 <h1>Out of Stock Items</h1>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to Inventory Management</a>
+    <a asp-action="Index" class="btn btn-secondary">Torna all'inventario</a>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Store</th>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Status</th>
+            <th>Prodotto</th>
+            <th>Categoria</th>
+            <th>Prezzo</th>
+            <th>Stato</th>
             @if (User.IsInRole("Manager"))
             {
-                <th>Actions</th>
+                <th>Azioni</th>
             }
         </tr>
     </thead>
@@ -68,13 +68,13 @@
                                         <input type="hidden" name="idNegozio" value="@item.IdNegozio" />
                                         <input type="hidden" name="idProdotto" value="@item.IdProdotto" />
                                         <div class="form-group">
-                                            <label>New Quantity:</label>
+                                            <label>Nuova Quantità:</label>
                                             <input type="number" name="nuovaQuantita" class="form-control"
                                                    value="0" min="1" required />
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
                                         <button type="submit" class="btn btn-primary">Restock</button>
                                     </div>
                                 </form>
@@ -90,6 +90,6 @@
 @if (!Model.Any())
 {
     <div class="alert alert-success">
-        No out of stock items found. All products are available!
+        Nessun prodotto esaurito trovato. Tutti i prodotti sono disponibili!
     </div>
 }

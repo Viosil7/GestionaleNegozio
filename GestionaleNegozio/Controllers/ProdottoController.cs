@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using GestionaleNegozio.Models;
 using GestionaleNegozio.Data.Interfaces;
 
-[Authorize(Roles = "Manager")]
+[Authorize]
 public class ProdottoController : Controller
 {
     private readonly ProdottoDao _prodottoDao;
