@@ -26,13 +26,11 @@ body {
     -webkit-animation-timing-function: linear;
     animation-timing-function: linear;
     margin-bottom: 60px;
-    min-height: 100vh;
+    max-height: 100vh;
     position: relative;
     padding-bottom: 60px;
 }
-html, body {
-    overflow-y: hidden;
-}
+
 @keyframes bg-scrolling {
     0% {
         background-position: -50px 50px;

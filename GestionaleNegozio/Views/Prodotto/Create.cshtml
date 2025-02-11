@@ -8,7 +8,7 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -35,7 +35,7 @@
                 <input asp-for="Prezzo" class="form-control" type="number" step="0.01" />
                 <span asp-validation-for="Prezzo" class="text-danger"></span>
             </div>
-
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header bg-orange text-white">
                     <h5 class="mb-0">
@@ -60,6 +60,7 @@
                     }
                 </div>
             </div>
+        </div>
 
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-orange">
