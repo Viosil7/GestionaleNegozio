@@ -4,146 +4,165 @@
     ViewData["Title"] = "Create Store";
 }
 
-<h1>Crea Nuovo Negozio</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-orange text-white">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-shop me-2"></i>Crea Nuovo Negozio
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-orange text-white">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-geo-alt me-2"></i>Localizzazione
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Regione" class="form-label fw-bold"></label>
+                                            <select asp-for="Regione" class="form-control form-control-lg" id="regioneSelect">
+                                                <option value="">Seleziona una regione</option>
+                                                <option value="Lazio">Lazio</option>
+                                                <option value="Campania">Campania</option>
+                                            </select>
+                                            <span asp-validation-for="Regione" class="text-danger"></span>
+                                        </div>
 
-            <div class="form-group">
-                <label asp-for="Regione" class="control-label"></label>
-                <select asp-for="Regione" class="form-control" id="regioneSelect">
-                    <option value="">Seleziona una regione</option>
-                    <option value="Lazio">Lazio</option>
-                    <option value="Campania">Campania</option>
-                </select>
-                <span asp-validation-for="Regione" class="text-danger"></span>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label fw-bold">Provincia</label>
+                                            <select name="Provincia" class="form-control form-control-lg" id="provinciaSelect">
+                                                <option value="">Seleziona prima una regione</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Città" class="form-label fw-bold"></label>
+                                            <select asp-for="Città" class="form-control form-control-lg" id="cittaSelect">
+                                                <option value="">Seleziona prima una Provincia</option>
+                                            </select>
+                                            <span asp-validation-for="Città" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-orange text-white">
+                                        <h5 class="mb-0">
+                                            <i class="bi bi-pin-map me-2"></i>Indirizzo
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Indirizzo" class="form-label fw-bold"></label>
+                                            <textarea asp-for="Indirizzo" class="form-control form-control-lg" rows="3"></textarea>
+                                            <span asp-validation-for="Indirizzo" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-orange btn-lg px-5">
+                                <i class="bi bi-save me-2"></i>Crea Negozio
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary btn-lg ms-2">
+                                <i class="bi bi-arrow-left me-2"></i>Torna all'elenco
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label">Provincia</label>
-                <select name="nessuno" class="form-control" id="provinciaSelect">
-                    <option value="">Seleziona prima una regione</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Città" class="control-label"></label>
-                <select asp-for="Città" class="form-control" id="cittaSelect">
-                    <option value="">Seleziona prima una Provincia</option>
-                </select>
-                <span asp-validation-for="Città" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Indirizzo" class="control-label"></label>
-                <input asp-for="Indirizzo" class="form-control" />
-                <span asp-validation-for="Indirizzo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <input type="submit" value="Crea" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Torna all'elenco</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-        $(document).ready(function () {
-            const province = {
-                'Lazio': ['Roma', 'Latina', 'Frosinone', 'Viterbo', 'Rieti'],
-                'Campania': ['Napoli', 'Salerno', 'Caserta', 'Avellino', 'Benevento']
+        $(document).ready(function() {
+            const locationData = {
+                'Lazio': {
+                    'Roma': ['Roma', 'Fiumicino', 'Civitavecchia', 'Guidonia Montecelio', 'Tivoli'],
+                    'Frosinone': ['Frosinone', 'Cassino', 'Alatri', 'Sora', 'Anagni'],
+                    'Latina': ['Latina', 'Aprilia', 'Terracina', 'Formia', 'Cisterna di Latina'],
+                    'Viterbo': ['Viterbo', 'Civita Castellana', 'Tarquinia', 'Vetralla', 'Montefiascone'],
+                    'Rieti': ['Rieti', 'Fara in Sabina', 'Cittaducale', 'Poggio Mirteto', 'Contigliano']
+                },
+                'Campania': {
+                    'Napoli': ['Napoli', 'Giugliano', 'Torre del Greco', 'Pozzuoli', 'Casoria'],
+                    'Salerno': ['Salerno', 'Battipaglia', 'Nocera Inferiore', 'Scafati', 'Cava de Tirreni'],
+                    'Caserta': ['Caserta', 'Aversa', 'Marcianise', 'Maddaloni', 'Santa Maria Capua Vetere'],
+                    'Avellino': ['Avellino', 'Ariano Irpino', 'Montoro', 'Mercogliano', 'Solofra'],
+                    'Benevento': ['Benevento', 'Montesarchio', 'San Giorgio del Sannio', 'Sant\'Agata de\' Goti', 'Airola']
+                }
             };
 
-            const cities = {
-                'Roma': [
-                    'Affile', 'Agosta', 'Albano Laziale', 'Allumiere', 'Anguillara Sabazia', 'Anticoli Corrado', 'Anzio', 'Arcinazzo Romano', 'Artena', 'Aspra',
-                    'Assisi', 'Bellegra', 'Boville Ernica', 'Bracciano', 'Campagnano di Roma', 'Campoli Appennino', 'Canale Monterano', 'Capena', 'Carpineto Romano',
-                    'Castel Gandolfo', 'Castel Madama', 'Cerveteri', 'Civitavecchia', 'Colonna', 'Fiano Romano', 'Frascati', 'Gallicano nel Lazio', 'Genazzano',
-                    'Genzano di Roma', 'Grottaferrata', 'Guidonia Montecelio', 'Lanuvio', 'Lido di Ostia', 'Lodovico Einaudi', 'Maccarese', 'Marino', 'Mentana',
-                    'Monte Porzio Catone', 'Morolo', 'Nettuno', 'Olevano Romano', 'Palestrina', 'Palombara Sabina', 'Pomezia', 'Ponzano Romano', 'Roma', 'Rocca di Papa',
-                    'Rocca Priora', 'San Cesareo', 'San Giovanni in Laterano', 'San Lorenzo', 'Santa Marinella', 'Sant’Angelo Romano', 'Santo Stefano Roma', 'Sora',
-                    'Subiaco', 'Tivoli', 'Valmontone', 'Velletri', 'Villanova di Guidonia', 'Vivi la città'
-                ],
-                'Frosinone': [
-                    'Acuto', 'Alatri', 'Arnara', 'Atina', 'Azzio', 'Ceccano', 'Ceccano', 'Frosinone', 'Guarcino', 'Isola del Liri', 'Isoletta', 'Roccasecca',
-                    'San Donato Val di Comino', 'Sora', 'Veroli', 'Vico del Lazio', 'Ceccano'
-                ],
-
-                'Viterbo': [
-                    'Acquapendente', 'Bagnoregio', 'Barbarano Romano', 'Bolsena', 'Capranica', 'Canino', 'Celleno', 'Civita', 'Civitella D’Agliano', 'Fabrica di Roma',
-                    'Farnese', 'Gradoli', 'Grotte di Castro', 'Montalto di Castro', 'Montefiascone', 'Nepi', 'Orte', 'Piansano', 'San Lorenzo Nuovo', 'San Vito Romano',
-                    'Sutri', 'Viterbo', 'Vitorchiano'
-                ],
-
-                'Latina': [
-                    'Aprilia', 'Borgo Sabotino', 'Cisterna di Latina', 'Fondi', 'Latina', 'Minturno', 'Sabaudia', 'Terracina', 'Pontinia', 'Priverno', 'Sezze',
-                    'Sermoneta', 'Cori', 'Cisterna di Latina', 'Roccagorga', 'San Felice Circeo', 'Cisterna di Latina'
-                ],
-
-                'Rieti': [
-                    'Amatrice', 'Antrodoco', 'Cittaducale', 'Fara in Sabina', 'Greccio', 'Montopoli di Sabina', 'Poggio Moiano', 'Poggio Mirteto', 'Rieti', 'Rocca Sinibalda',
-                    'Cantalice', 'Fiamignano', 'Leonessa', 'Lunga'
-                ],
-                'Napoli': [
-                    'Acerra', 'Anacapri', 'Boscoreale', 'Boscotrecase', 'Brusciano', 'Caivano', 'Campagna', 'Capri', 'Casamarciano', 'Caserta', 'Castellammare di Stabia',
-                    'Cercola', 'Cicciano', 'Cisterna di Latina', 'Comune di Napoli', 'Forio', 'Giugliano in Campania', 'Gragnano', 'Lacco Ameno', 'Massa Lubrense', 'Melito di Napoli',
-                    'Meta', 'Nola', 'Ospedaletto d’Alpinolo', 'Pozzuoli', 'Portici', 'Sant’Anastasia', 'Sant\'Antimo', 'Sorrento', 'Torre del Greco', 'Torre Annunziata', 'Vico Equense'
-                ],
-                'Salerno': [
-                    'Agropoli', 'Ariano Irpino', 'Battipaglia', 'Bellizzi', 'Campagna', 'Capaccio-Paestum', 'Cava de\' Tirreni', 'Eboli', 'Fisciano', 'Giffoni Valle Piana',
-                    'Mercato San Severino', 'Minori', 'Nocera Inferiore', 'Nocera Superiore', 'Pagani', 'Pellezzano', 'Polla', 'Salerno', 'Scafati', 'Serre', 'Siano', 'Teggiano'
-                ],
-                'Avellino': [
-                    'Ariano Irpino', 'Avellino', 'Baiano', 'Bagnoli Irpino', 'Calabritto', 'Capriglia Irpina', 'Carife', 'Casalbore', 'Cassano Irpino', 'Chiusano di San Domenico',
-                    'Contrada', 'Fontanarosa', 'Grottolella', 'Lacedonia', 'Lapio', 'Lauro', 'Monteforte Irpino', 'Montella', 'Nusco', 'San Mango sul Calore', 'San Martino Valle Caudina',
-                    'San Michele di Serino', 'Solofra', 'Summonte', 'Sturno', 'Valle di Lauro', 'Vallata', 'Zungoli'
-                ],
-                'Caserta': [
-                    'Aversa', 'Capua', 'Caserta', 'Castel Volturno', 'Cesa', 'Cervino', 'Casanova', 'Cellole', 'Cervinara', 'Cesa', 'Frignano', 'Gricignano di Aversa',
-                    'Marcianise', 'Maddaloni', 'Mignano Monte Lungo', 'Mondragone', 'Piedimonte Matese', 'Pignataro Maggiore', 'San Nicola la Strada', 'San Prisco', 'Santa Maria Capua Vetere',
-                    'Sessa Aurunca', 'Teano'
-                ],
-                'Benevento': [
-                    'Airola', 'Amorosi', 'Apice', 'Benevento', 'Bucciano', 'Calvi', 'Campolattaro', 'Ceppaloni', 'Cervinara', 'Colliano', 'Dugenta', 'Faicchio', 'Guardia Sanframondi',
-                    'Jelsi', 'Laureana Cilento', 'Luzzano', 'Melizzano', 'Molinara', 'Montefusco', 'Montesarchio', 'Paolisi', 'Pannarano', 'San Leucio del Sannio', 'San Salvatore Telesino',
-                    'Sant\'Agata de\' Goti', 'Sant\'Arcangelo Trimonte', 'Solopaca', 'Tocco Caudio', 'Valle di Maddaloni', 'San Bartolomeo in Galdo'
-                ]
-            }
-
-            $('#regioneSelect').change(function () {
+            $('#regioneSelect').change(function() {
                 const selectedRegion = $(this).val();
-                const cittaSelect = $('#provinciaSelect');
-                cittaSelect.empty();
-                cittaSelect.append('<option value="">Seleziona una Provincia</option>');
+                const provinciaSelect = $('#provinciaSelect');
+                const cittaSelect = $('#cittaSelect');
 
-                if (selectedRegion) {
-                    province[selectedRegion].forEach(function (city) {
-                        cittaSelect.append(`<option value="${city}">${city}</option>`);
+                // Reset both provincia and città selections
+                provinciaSelect.html('<option value="">Seleziona una provincia</option>');
+                cittaSelect.html('<option value="">Seleziona prima una provincia</option>');
+
+                if (selectedRegion && locationData[selectedRegion]) {
+                    // Add province options
+                    Object.keys(locationData[selectedRegion]).forEach(function(provincia) {
+                        provinciaSelect.append(`<option value="${provincia}">${provincia}</option>`);
                     });
                 }
             });
-            $('#provinciaSelect').change(function () {
+
+            $('#provinciaSelect').change(function() {
+                const selectedRegion = $('#regioneSelect').val();
                 const selectedProvincia = $(this).val();
                 const cittaSelect = $('#cittaSelect');
-                cittaSelect.empty();
-                cittaSelect.append('<option value="">Seleziona una città</option>');
 
-                if (selectedProvincia) {
-                    cities[selectedProvincia].forEach(function (city) {
-                        cittaSelect.append(`<option value="${city}">${city}</option>`);
+                // Reset città selection
+                cittaSelect.html('<option value="">Seleziona una città</option>');
+
+                if (selectedRegion && selectedProvincia &&
+                    locationData[selectedRegion] &&
+                    locationData[selectedRegion][selectedProvincia]) {
+                    // Add città options
+                    locationData[selectedRegion][selectedProvincia].forEach(function(citta) {
+                        cittaSelect.append(`<option value="${citta}">${citta}</option>`);
                     });
                 }
             });
-
         });
     </script>
 }
+
+<style>
+    .bg-orange {
+        background-color: #ff6b35;
+    }
+
+    .btn-orange {
+        background-color: #ff6b35;
+        color: white;
+    }
+
+        .btn-orange:hover {
+            background-color: #e85a2c;
+            color: white;
+        }
+
+    .hover-bg:hover {
+        background-color: #f8f9fa;
+    }
+</style>
