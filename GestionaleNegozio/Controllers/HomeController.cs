@@ -21,7 +21,7 @@ namespace GestionaleNegozio.Controllers
 
         public IActionResult Index(int page = 1, int orderPage = 1)
         {
-            const int pageSize = 5;
+            const int pageSize = 10;
 
             var allOrders = _ordineDao.GetRecentOrders(50);
             var ordersWithDetails = allOrders
